@@ -1,0 +1,1341 @@
+<!-- Kalam — v3 (2026-08-08): renamed from Humara Saathi. Pencil mascot, page-by-page flow.
+     Tap-menu is the sole, primary entry point. See angan-project-notes.md for the full changelog. -->
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>कलम — Kalam</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#C98A1F">
+<link rel="icon" href="icon-192-pencil2.png">
+<link rel="apple-touch-icon" href="icon-192-pencil2.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kalam">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#C98A1F; --accent-dark:#96650F; --accent-tint:#FBEFD6; --ink:#3A2E27;
+    --leaf:#5B7B4F; --leaf-dark:#3F5936; --card:#FFFFFF; --muted:#8A7A6E;
+    --shadow: 0 2px 10px rgba(58,46,39,0.10);
+    --font-head:'Poppins',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --font-body:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-body);font-weight:400;background:#FFFFFF;color:var(--ink);}
+  h1,h2,h3,h4,.btn,.logo-text,select{font-family:var(--font-head);}
+  .wrap{max-width:640px;min-height:100vh;margin:0 auto;padding:16px 14px 70px;display:flex;flex-direction:column;justify-content:center;}
+  header.top{text-align:center;padding:14px 0 18px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  header.top .logo-text{font-size:22px;font-weight:800;color:var(--accent-dark);}
+  header.top .logo-text .en{font-family:var(--font-body);display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:1px;}
+  .tracker{width:100%;max-width:260px;}
+  .tracker-track{background:var(--accent-tint);border-radius:999px;height:9px;overflow:hidden;}
+  .tracker-fill{background:var(--leaf);height:100%;border-radius:999px;transition:width 0.3s;}
+  .tracker-text{font-size:11px;color:var(--muted);margin:5px 0 0;font-weight:500;}
+  .page{animation:pageIn 0.25s ease;}
+  @keyframes pageIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .done-btn{background:var(--leaf);margin-top:16px;}
+  .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:1.5px solid var(--accent-tint);}
+  .card h3{margin:0 0 2px;font-size:15px;color:var(--accent-dark);font-weight:700;}
+  .card .h3-en{margin:0 0 10px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;font-weight:500;}
+  select{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--accent);font-size:15px;font-weight:600;background:#FFFDF9;color:var(--ink);}
+  .btn{display:block;width:100%;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;background:var(--accent);margin-top:12px;}
+  .btn .en{font-family:var(--font-body);display:block;font-weight:500;font-size:12px;opacity:0.9;}
+  .btn.secondary{background:var(--leaf);}
+  .btn.ghost{background:#fff;color:var(--accent-dark);border:2px solid var(--accent);}
+  .btn:disabled{background:#E3CFA0;cursor:not-allowed;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+  .tile{background:#FFFDF9;border:1.5px solid var(--accent-tint);border-radius:12px;overflow:hidden;cursor:pointer;text-align:left;padding:0;}
+  .tile .photo{height:56px;}
+  .tile .label{padding:6px 7px;}
+  .tile .hi{font-family:var(--font-head);font-size:13px;font-weight:700;margin:0;color:var(--ink);}
+  .tile .en{font-size:10.5px;color:var(--muted);margin:0;}
+  .tile.selected{outline:2px solid var(--accent);}
+  .yesno{display:flex;gap:10px;margin-top:10px;}
+  .yesno button{flex:1;}
+  .activity{background:#FFFDF9;border:1.5px solid var(--accent-tint);border-radius:14px;padding:16px;margin-top:14px;}
+  .tier-pill{display:inline-block;background:var(--accent-tint);color:var(--accent-dark);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:8px;}
+  .tier-pill .en{font-weight:500;opacity:0.85;}
+  .activity-note{background:#FFF8E8;border-left:3px solid var(--accent);padding:8px 10px;border-radius:6px;font-size:12.5px;margin:8px 0 4px;line-height:1.45;}
+  .activity-note .en{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .activity h4{font-family:var(--font-head);margin:0 0 2px;font-size:16.5px;}
+  .activity h4 .en{font-family:var(--font-body);display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:1px;}
+  .activity .meta{font-size:12px;color:var(--muted);margin-bottom:10px;}
+  .activity ol{margin:0;padding-left:20px;font-size:14.5px;line-height:1.5;}
+  .activity ol li{margin-bottom:8px;}
+  .activity ol li .en{display:block;font-size:12px;color:var(--muted);margin-top:2px;}
+  .activity .fallback{background:var(--accent-tint);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:13.5px;}
+  .activity .fallback .en{display:block;font-size:11.5px;color:var(--muted);margin-top:4px;}
+  .activity .skill-tag{display:inline-block;background:var(--leaf);color:#fff;font-size:11.5px;padding:3px 9px;border-radius:999px;font-weight:600;margin-top:10px;}
+  .activity .skill-tag .en{opacity:0.85;font-size:10.5px;}
+  .speak-btn{display:inline-flex;align-items:center;gap:5px;background:var(--accent-tint);color:var(--accent-dark);border:none;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;}
+  .checkin{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--accent-tint);}
+  .checkin .ci-title{font-family:var(--font-head);font-size:12.5px;font-weight:700;color:var(--accent-dark);margin:0 0 8px;}
+  .checkin .ci-q{font-size:14px;margin:0 0 2px;font-weight:600;}
+  .checkin .ci-q-en{font-size:11.5px;color:var(--muted);margin:0 0 6px;}
+  .checkin .ci-faces{display:flex;gap:8px;margin-bottom:12px;}
+  .checkin .ci-faces button{flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid var(--accent-tint);background:#fff;font-size:18px;cursor:pointer;}
+  .checkin .ci-faces button.picked{border-color:var(--accent);background:var(--accent-tint);}
+  .checkin .ci-faces button span{display:block;font-size:9.5px;color:var(--muted);margin-top:2px;font-weight:600;}
+  .checkin-submit{display:block;width:100%;padding:11px;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font-head);cursor:pointer;color:#fff;background:var(--leaf-dark);margin-top:6px;}
+  .checkin-submit.saved{background:#3F5936;}
+  .checkin-saved-msg{text-align:center;font-size:12.5px;color:var(--leaf-dark);font-weight:600;margin-top:8px;display:none;}
+  .home-btn{position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;border-radius:50%;
+    background:#fff;border:2px solid var(--accent);box-shadow:var(--shadow);cursor:pointer;padding:0;}
+  .home-btn .icon{font-size:20px;line-height:1;}
+  .logo-badge{position:fixed;top:12px;right:12px;z-index:50;width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;border-radius:50%;
+    background:#fff;border:2px solid var(--accent);box-shadow:var(--shadow);overflow:hidden;
+    -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;}
+  .logo-badge svg{width:30px;height:auto;transform:translateY(3px);}
+  .growth-overlay{position:fixed;inset:0;background:rgba(58,46,39,0.55);z-index:100;
+    display:none;align-items:center;justify-content:center;padding:20px;}
+  .growth-card{background:#fff;border-radius:20px;padding:30px 24px 24px;text-align:center;
+    max-width:300px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,0.28);}
+  .growth-avatar{width:150px;height:255px;display:flex;align-items:flex-end;justify-content:center;margin:0 auto 18px;overflow:visible;}
+  .growth-avatar svg{width:100%;height:100%;transform-origin:bottom center;
+    transition:transform 0.8s cubic-bezier(.34,1.56,.64,1);}
+  .growth-avatar.growing svg{transform:scaleY(var(--grow-scale,1)) scaleX(1.04);}
+  .growth-avatar.shake svg{animation:pencilShake 0.5s ease;}
+  @keyframes pencilShake{
+    0%,100%{transform:translateX(0) rotate(0deg);}
+    20%{transform:translateX(-5px) rotate(-4deg);}
+    40%{transform:translateX(5px) rotate(4deg);}
+    60%{transform:translateX(-4px) rotate(-3deg);}
+    80%{transform:translateX(3px) rotate(2deg);}
+  }
+  .growth-msg-hi{font-family:var(--font-head);font-size:19px;font-weight:800;color:var(--accent-dark);margin:0 0 3px;}
+  .growth-msg-en{font-size:12.5px;color:var(--muted);margin:0;}
+  .growth-child-hint{font-size:12px;font-weight:700;color:var(--accent-dark);margin:10px 0 0;}
+  .growth-child-hint .en{display:block;font-weight:500;color:var(--muted);font-size:11px;margin-top:1px;}
+  .growth-tap-hint{font-size:10.5px;color:var(--muted);margin-top:16px;}
+</style>
+</head>
+<body>
+<button class="home-btn" id="homeBtn" aria-label="Home">
+  <span class="icon">🏠</span>
+</button>
+<span class="logo-badge" id="logoIcon" aria-label="Kalam"></span>
+<div class="growth-overlay" id="growthOverlay"></div>
+<div class="wrap">
+  <header class="top" id="appHeader">
+    <div class="logo-text">कलम<span class="en">Kalam</span></div>
+    <div class="tracker" id="progressTracker">
+      <div class="tracker-track"><div class="tracker-fill" id="progressFill"></div></div>
+      <p class="tracker-text" id="progressText"></p>
+    </div>
+  </header>
+
+  <!-- Page 1: pick the month -->
+  <div class="page" id="page-month">
+    <div class="card">
+      <h3>इस महीने</h3>
+      <div class="h3-en">This month</div>
+      <select id="monthSelect"></select>
+      <button class="btn" id="monthNextBtn">आगे बढ़ें<span class="en">Next</span></button>
+    </div>
+  </div>
+
+  <!-- Page 2: what do you have -->
+  <div class="page" id="page-menu" style="display:none;">
+    <div class="card" id="fallbackCard">
+      <h3>यहाँ क्या है?</h3>
+      <div class="h3-en">What do you have here?</div>
+      <div class="grid3" id="tileGrid"></div>
+    </div>
+    <div class="card" id="followupCard" style="display:none;">
+      <h3 id="followupQ"></h3>
+      <div class="yesno">
+        <button class="btn secondary" id="yesBtn">हाँ<span class="en">Yes</span></button>
+        <button class="btn ghost" id="noBtn">नहीं<span class="en">No</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 3: the activity, full screen, one at a time -->
+  <div class="page" id="page-activity" style="display:none;">
+    <div id="activityWrap"></div>
+  </div>
+
+  <!-- Page 4: check-in -->
+  <div class="page" id="page-checkin" style="display:none;">
+    <div id="checkinWrap"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // ---------- Curriculum modules ----------
+  const MODULES = [
+    { id:"jun", en:"June", hi:"जून", title_hi:"अपनी चीज़ों को जानना", title_en:"Getting to Know My Things" },
+    { id:"jul", en:"July", hi:"जुलाई", title_hi:"चारों ओर रंग", title_en:"Colours All Around" },
+    { id:"aug", en:"August", hi:"अगस्त", title_hi:"आकार और वस्तुएँ", title_en:"Shapes & Things" },
+    { id:"sep", en:"September", hi:"सितंबर", title_hi:"बड़ा-छोटा, ज़्यादा-कम", title_en:"Big & Small, More & Less" },
+    { id:"oct", en:"October", hi:"अक्टूबर", title_hi:"अपनी दुनिया गिनना", title_en:"Counting My World" },
+    { id:"nov", en:"November", hi:"नवंबर", title_hi:"पैटर्न और क्रम", title_en:"Patterns & Sequences" },
+    { id:"dec", en:"December", hi:"दिसंबर", title_hi:"दो नियमों से छाँटना", title_en:"Sorting by Two Rules" },
+    { id:"jan", en:"January", hi:"जनवरी", title_hi:"6-10 तक संख्याएँ और समूह जोड़ना", title_en:"Numbers 6-10 & Combining Groups" },
+    { id:"feb", en:"February", hi:"फ़रवरी", title_hi:"समान, भिन्न और श्रेणियाँ", title_en:"Same, Different & Categories" },
+    { id:"mar", en:"March", hi:"मार्च", title_hi:"सब कुछ जोड़ना", title_en:"Putting It All Together" }
+  ];
+
+  const UNIVERSAL_FIRST_Q_HI = "क्या बच्चा पहली बार में निर्देश समझ पाया, या दोहराना पड़ा?";
+  const UNIVERSAL_FIRST_Q_EN = "Could the child understand the instructions in the first go, or did it need repeating?";
+
+  // Each step/fallback/checkIn item is {hi, en}. category unchanged.
+  const ACTIVITIES = {
+    jun: [
+      { category:"pulses", title_hi:"रंग वाली कटोरियाँ", title_en:"Colour bowls", needs:["colour"],
+        materials_hi:"दो रंग की दाल, दो कटोरी", materials_en:"2 colours of dal, 2 katoris", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"थोड़ी सी दोनों दाल एक थाली में मिला लें।", en:"Mix a small handful of both dals on a plate."},
+          {hi:"बच्चे से कहें कि पीली दाल एक कटोरी में और लाल दाल दूसरी कटोरी में डाले।", en:"Ask the child to put yellow ones in one bowl, red ones in the other."}
+        ],
+        fallback:{hi:"अगर बच्चा न समझ पाए: आप ख़ुद एक पीली और एक लाल दाल रखें, कहें 'एक जैसा रंग साथ', फिर अगली दाल बच्चे को दें।", en:"If sorting doesn't land: put one yellow and one red in place yourself, saying 'same colour together', then hand over the next piece."},
+        skill_hi:"वर्गीकरण, रंग छँटाई", skill_en:"Classification, colour sorting",
+        checkIn:[{hi:"क्या बच्चा दोनों रंगों में फ़र्क बता पाया?", en:"Could the child tell the two colours apart?"},{hi:"क्या बच्चा उन्हें सही कटोरी में रख पाया?", en:"Could the child put them in the right bowls?"}] },
+      { category:"utensils", title_hi:"मेरी तरह करो", title_en:"Copy me",
+        materials_hi:"एक चम्मच, एक कटोरी", materials_en:"1 spoon, 1 katori", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"कहें: 'चम्मच उठाओ, फिर उसे कटोरी में रखो।'", en:"Say: 'pick up the spoon, then put it in the bowl.'"},
+          {hi:"बच्चे को बिना दोहराए दोनों काम करने दें।", en:"Let the child try both steps without repeating."}
+        ],
+        fallback:{hi:"अगर सिर्फ़ एक काम हो पाए: पहले दोनों काम अलग-अलग बताएं, फिर साथ में कहें।", en:"If only one step happens: break it into two single-step instructions first, then combine again."},
+        skill_hi:"निर्देशों का पालन", skill_en:"Following instructions",
+        checkIn:[{hi:"क्या बच्चे ने कहने पर चम्मच उठाई?", en:"Did the child pick up the spoon when asked?"},{hi:"क्या बच्चे ने दोनों काम सही क्रम में किए?", en:"Did the child complete both steps in order?"}] },
+      { category:"any", title_hi:"एक रंग, अलग चीज़", title_en:"Same colour, different object",
+        materials_hi:"एक जैसे रंग की कोई भी दो चीज़ें", materials_en:"any 2 same-coloured items", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"एक चीज़ दिखाएं, उसका रंग बताएं।", en:"Hold up one item, name its colour."},
+          {hi:"बच्चे से कहें कि उसी रंग की कोई और चीज़ ढूंढे।", en:"Ask the child to find something else the same colour."}
+        ],
+        fallback:{hi:"अगर ग़लत रंग लाया जाए: दोनों चीज़ें पास-पास रखें और पूछें 'एक जैसा या अलग?'", en:"If the wrong colour is brought: hold both items side by side and ask 'same or different?'"},
+        skill_hi:"रंगों के नाम, वर्गीकरण", skill_en:"Colour vocabulary, classification",
+        checkIn:[{hi:"क्या बच्चा दिखाया गया रंग बता पाया?", en:"Could the child name the colour shown?"},{hi:"क्या बच्चा उसी रंग की चीज़ ढूंढ पाया?", en:"Could the child find a matching-colour object?"}] }
+    ],
+    jul: [
+      { category:"mixed", title_hi:"इंद्रधनुष मेज़", title_en:"Rainbow table",
+        materials_hi:"रसोई की अलग-अलग रंग की कुछ चीज़ें", materials_en:"a few differently-coloured kitchen items", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"चीज़ों को एक कतार में रखें।", en:"Lay the items in a row."},
+          {hi:"एक-एक करके हर रंग का नाम साथ में बोलें।", en:"Name each colour together, one at a time."}
+        ],
+        fallback:{hi:"अगर रंग गड़बड़ हो जाएं: किसी जानी-पहचानी चीज़ (जैसे कपड़े) की तरफ़ इशारा करें जो उसी रंग की हो।", en:"If colours get mixed up: point to something they already know that colour (their clothing)."},
+        skill_hi:"रंगों के नाम", skill_en:"Colour vocabulary",
+        checkIn:[{hi:"क्या बच्चा कम से कम 3 रंगों के नाम बता पाया?", en:"Could the child name at least 3 of the colours?"}] },
+      { category:"any", title_hi:"रंग ढूंढो", title_en:"Colour hunt",
+        materials_hi:"कुछ नहीं — बस रसोई", materials_en:"none — just the kitchen", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"एक रंग बोलें: 'लाल रंग की कोई चीज़ ढूंढो!'", en:"Call out a colour: 'find something red!'"},
+          {hi:"बच्चा उस रंग की कोई चीज़ लेकर आए।", en:"Child brings back an item of that colour."}
+        ],
+        fallback:{hi:"अगर ग़लत रंग लाया जाए: सही चीज़ को पास रखें और पूछें 'एक जैसा या अलग?'", en:"If wrong colour is brought: hold the correct item next to the wrong one and ask 'same or different?'"},
+        skill_hi:"शारीरिक गतिविधि, रंगों के नाम", skill_en:"Gross motor, colour vocabulary",
+        checkIn:[{hi:"क्या बच्चा सही रंग की चीज़ ढूंढ पाया?", en:"Could the child find the right-coloured item?"}] },
+      { category:"utensils", title_hi:"ढक्कन मिलाओ", title_en:"Match the lid",
+        materials_hi:"दो-तीन डिब्बे जिनके ढक्कन मिले-जुले हों", materials_en:"2-3 jars with matching lids mixed up", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"ढक्कनों को डिब्बों के पास मिलाकर रखें।", en:"Mix the lids next to the jars."},
+          {hi:"बच्चे से कहें कि हर ढक्कन को उसके डिब्बे के रंग से मिलाए।", en:"Ask the child to match each lid to its jar's colour."}
+        ],
+        fallback:{hi:"एक-एक ढक्कन हर डिब्बे के पास रखें और पूछें 'एक जैसा रंग, हाँ या नहीं?'", en:"Hold one lid next to each jar in turn and ask 'same colour, yes or no?'"},
+        skill_hi:"मिलान करना, हाथों की बारीक हरकत", skill_en:"Matching, fine motor",
+        checkIn:[{hi:"क्या बच्चा हर ढक्कन को सही डिब्बे से मिला पाया?", en:"Could the child match each lid to the right jar?"}] }
+    ],
+    aug: [
+      { category:"dough", title_hi:"रोटी बेलना", title_en:"Roti roll",
+        materials_hi:"बेलन और आटा या रोटी, एक चौकोर चीज़", materials_en:"rolling pin + dough or roti, a square/rectangular item", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"गोल रोटी दिखाएं, कहें 'यह गोला है।'", en:"Show the round roti, say 'this is a circle.'"},
+          {hi:"चौकोर चीज़ दिखाएं, पूछें 'एक जैसा आकार या अलग?'", en:"Show the square item, ask 'same shape or different?'"}
+        ],
+        fallback:{hi:"हर आकार के किनारे पर उंगली फिराते हुए उसका नाम बोलें।", en:"Trace the edge of each shape with a finger while naming it."},
+        skill_hi:"आकार पहचानना", skill_en:"Shape recognition",
+        checkIn:[{hi:"क्या बच्चा गोल आकार बता पाया?", en:"Could the child point out the round shape?"},{hi:"क्या बच्चा गोल और चौकोर में फ़र्क बता पाया?", en:"Could the child tell the round and square shapes apart?"}] },
+      { category:"utensils", title_hi:"रसोई में आकार ढूंढो", title_en:"Shape hunt in the kitchen",
+        materials_hi:"एक गोल ढक्कन, एक आयत डिब्बा", materials_en:"a round lid, a rectangular box", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"एक आकार दिखाएं, उसका नाम बोलें।", en:"Show one shape, name it."},
+          {hi:"बच्चे से कहें कि उसी आकार की एक और चीज़ ढूंढे।", en:"Ask the child to find one more thing with the same shape."}
+        ],
+        fallback:{hi:"दोनों चीज़ों के किनारे साथ रखें ताकि बच्चा कोनों को महसूस कर सके।", en:"Place the two objects' edges together so the child can feel corners vs. no corners."},
+        skill_hi:"आकार के अनुसार छँटाई", skill_en:"Shape sorting",
+        checkIn:[{hi:"क्या बच्चा उसी आकार की चीज़ ढूंढ पाया?", en:"Could the child find a matching-shape object?"}] },
+      { category:"utensils", title_hi:"बोतल के ढक्कन के गोले", title_en:"Bottle cap circles",
+        materials_hi:"बोतल के ढक्कन, एक मुड़ा चौकोर कपड़ा", materials_en:"bottle caps, a folded square cloth", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"ढक्कनों को कतार में रखें, पूछें 'यह कौन सा आकार है?'", en:"Line up the bottle caps, ask 'what shape?'"},
+          {hi:"मुड़े कपड़े को पास रखें, पूछें कि क्या यह एक जैसा है।", en:"Place the folded cloth next to them, ask if it's the same."}
+        ],
+        fallback:{hi:"ढक्कन को लुढ़का कर दिखाएं (यह गोल है); कपड़े को लुढ़काने की कोशिश करें कि नहीं लुढ़कता।", en:"Roll a bottle cap to show it rolls (round); try rolling the cloth to show it can't."},
+        skill_hi:"आकार की तुलना", skill_en:"Shape comparison",
+        checkIn:[{hi:"क्या बच्चा बता पाया कौन सी चीज़ लुढ़कती है?", en:"Could the child tell which items roll and which don't?"}] }
+    ],
+    sep: [
+      { category:"pulses", title_hi:"किस कटोरी में ज़्यादा है?", title_en:"Which bowl has more?",
+        materials_hi:"दो कटोरी, चावल या दाल", materials_en:"2 katoris, rice or dal", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"एक कटोरी में थोड़ा और दूसरी में ज़्यादा डालें।", en:"Put a small handful in one bowl, a bigger handful in the other."},
+          {hi:"पूछें 'किस कटोरी में ज़्यादा है?'", en:"Ask 'which bowl has more?'"}
+        ],
+        fallback:{hi:"दोनों को दो लाइनों में फैलाएं और बड़ी लाइन पर इशारा करने को कहें।", en:"Pour both out into two lines and ask the child to point at the longer line."},
+        skill_hi:"तुलना, माप के शब्द", skill_en:"Comparison, measurement vocabulary",
+        checkIn:[{hi:"क्या बच्चा ज़्यादा वाली कटोरी पर इशारा कर पाया?", en:"Could the child point to the bowl with more?"}],
+        tiers:{
+          easier:{ materials_hi:"दो कटोरी, चावल या दाल", materials_en:"2 katoris, rice or dal",
+            steps:[
+              {hi:"एक कटोरी में बहुत कम और दूसरी में कटोरी भर के डालें, ताकि फ़र्क साफ़ दिखे।", en:"Put just a few grains in one bowl and fill the other almost to the top, so the difference is obvious."},
+              {hi:"पूछें 'किस कटोरी में ज़्यादा है?'", en:"Ask 'which bowl has more?'"}
+            ],
+            fallback:{hi:"दोनों कटोरियाँ पास-पास रखें और भरी हुई कटोरी की तरफ़ ख़ुद इशारा करते हुए कहें 'यह ज़्यादा है'।", en:"Hold both bowls side by side and point to the fuller one yourself, saying 'this one has more.'"} },
+          harder:{ materials_hi:"तीन कटोरी, चावल या दाल", materials_en:"3 katoris, rice or dal",
+            steps:[
+              {hi:"तीनों कटोरियों में अलग-अलग मात्रा में डालें।", en:"Put different amounts in all three bowls."},
+              {hi:"बच्चे से कहें कि सबसे कम से सबसे ज़्यादा के क्रम में लगाए।", en:"Ask the child to line them up from least to most."}
+            ],
+            fallback:{hi:"एक बार में दो कटोरियों की तुलना करें, फिर तीसरी जोड़ें।", en:"Compare two bowls at a time first, then add the third."} }
+        } },
+      { category:"utensils", title_hi:"सबसे लंबा चम्मच", title_en:"Tallest spoon",
+        materials_hi:"अलग-अलग लंबाई के तीन-चार चम्मच", materials_en:"3-4 spoons of different lengths", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"चम्मचों को फ़र्श पर रखें।", en:"Lay the spoons on the floor."},
+          {hi:"बच्चे से कहें छोटे से बड़े क्रम में लगाए।", en:"Ask the child to line them up smallest to biggest."}
+        ],
+        fallback:{hi:"एक-एक चम्मच दें, सबसे छोटे से शुरू करें, पूछें 'पिछले से बड़ा या छोटा?'", en:"Hand spoons one at a time, smallest first, asking 'bigger or smaller than the last?'"},
+        skill_hi:"क्रम में लगाना", skill_en:"Seriation",
+        checkIn:[{hi:"क्या बच्चा चम्मचों को छोटे से बड़े क्रम में लगा पाया?", en:"Could the child order the spoons smallest to biggest?"}],
+        tiers:{
+          easier:{ materials_hi:"दो अलग लंबाई के चम्मच", materials_en:"2 spoons of different lengths",
+            steps:[
+              {hi:"दोनों चम्मच बच्चे के सामने रखें।", en:"Place both spoons in front of the child."},
+              {hi:"पूछें 'कौन सा बड़ा है, कौन सा छोटा?'", en:"Ask 'which one is bigger, which is smaller?'"}
+            ],
+            fallback:{hi:"दोनों चम्मच पास-पास रखें और लंबाई पर उंगली फिराते हुए दिखाएं कौन सा बड़ा है।", en:"Hold both spoons side by side and trace their length with a finger to show which is bigger."} },
+          harder:{ materials_hi:"पांच-छह अलग-अलग लंबाई के चम्मच या बर्तन", materials_en:"5-6 utensils of different lengths",
+            steps:[
+              {hi:"सभी चम्मचों को छोटे से बड़े क्रम में लगवाएं।", en:"Have the child line up all the spoons smallest to biggest."},
+              {hi:"एक और चम्मच दें और पूछें 'यह कहाँ जाएगा?' — उसे सही जगह पर रखने को कहें।", en:"Hand over one more spoon and ask 'where does this go?' — have them insert it in the right spot."}
+            ],
+            fallback:{hi:"नया चम्मच हर मौजूदा चम्मच के बगल में रखकर तुलना करें: 'इससे बड़ा या छोटा?'", en:"Compare the new spoon against each one in the row: 'bigger or smaller than this one?'"} }
+        } },
+      { category:"utensils", title_hi:"भरा या खाली?", title_en:"Full or empty?",
+        materials_hi:"अलग-अलग पानी वाले दो-तीन बर्तन", materials_en:"2-3 containers with different water levels", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"एक बर्तन दिखाएं, पूछें 'भरा, आधा, या खाली?'", en:"Show one container, ask 'full, half, or empty?'"},
+          {hi:"बाकी बर्तनों के साथ भी यही करें।", en:"Repeat with the others."}
+        ],
+        fallback:{hi:"एक बर्तन खाली करते हुए कहें 'खाली', फिर भरते हुए कहें 'भरा'।", en:"Pour one container out while saying 'empty', fill it while saying 'full'."},
+        skill_hi:"माप के शब्द", skill_en:"Measurement vocabulary",
+        checkIn:[{hi:"क्या बच्चा भरा, आधा और खाली में फ़र्क बता पाया?", en:"Could the child tell full, half, and empty apart?"}],
+        tiers:{
+          easier:{ materials_hi:"दो बर्तन — एक भरा, एक खाली", materials_en:"2 containers — one full, one empty",
+            steps:[
+              {hi:"एक बर्तन दिखाएं, पूछें 'भरा या खाली?'", en:"Show one container, ask 'full or empty?'"},
+              {hi:"दूसरे बर्तन के साथ भी यही करें।", en:"Repeat with the other."}
+            ],
+            fallback:{hi:"बर्तन खाली करते हुए कहें 'खाली', भरते हुए कहें 'भरा'।", en:"Pour it out while saying 'empty', fill it while saying 'full.'"} },
+          harder:{ materials_hi:"चार बर्तन, अलग-अलग पानी की मात्रा में", materials_en:"4 containers with different water levels",
+            steps:[
+              {hi:"सभी बर्तन दिखाएं।", en:"Show all the containers."},
+              {hi:"बच्चे से कहें सबसे भरे से सबसे खाली के क्रम में लगाए।", en:"Ask the child to line them up from fullest to emptiest."}
+            ],
+            fallback:{hi:"दो बर्तनों की तुलना पहले करें, फिर बाक़ी जोड़ें।", en:"Compare two containers first, then add the rest."} }
+        } }
+    ],
+    oct: [
+      { category:"pulses", title_hi:"मटर गिनो", title_en:"Count the peas",
+        materials_hi:"पांच मटर, राजमा, या कोई दाल", materials_en:"5 peas, rajma, or any pulse", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"एक-एक करके कटोरियों के बीच रखें, ज़ोर से गिनते हुए।", en:"Move one at a time between bowls, counting aloud."},
+          {hi:"बच्चे को 5 तक ख़ुद गिनने दें।", en:"Let the child try up to 5."}
+        ],
+        fallback:{hi:"बच्चे का हाथ पकड़ कर धीरे-धीरे एक-एक दाना साथ में गिनें।", en:"Hold the child's hand and move one piece per number together, slowly."},
+        skill_hi:"एक-एक करके गिनना", skill_en:"One-to-one counting",
+        checkIn:[{hi:"क्या बच्चे ने हर दाना हिलाते हुए ज़ोर से गिना?", en:"Did the child count out loud while moving each piece?"},{hi:"क्या बच्चा सही तरीक़े से 5 तक गिन पाया?", en:"Could the child count accurately to 5?"}],
+        tiers:{
+          easier:{ materials_hi:"तीन मटर या दाल के दाने", materials_en:"3 peas or pulse grains",
+            steps:[
+              {hi:"एक-एक करके कटोरियों के बीच रखें, ज़ोर से गिनते हुए।", en:"Move one at a time between bowls, counting aloud."},
+              {hi:"बच्चे को ख़ुद 3 तक गिनने दें।", en:"Let the child try counting to 3 on their own."}
+            ],
+            fallback:{hi:"बच्चे का हाथ पकड़कर धीरे-धीरे एक-एक दाना साथ में गिनें।", en:"Hold the child's hand and count one piece at a time together, slowly."} },
+          harder:{ materials_hi:"सात-आठ मटर या दाल के दाने", materials_en:"7-8 peas or pulse grains",
+            steps:[
+              {hi:"सबको गिनकर एक कटोरी में रखें।", en:"Count them all into one bowl."},
+              {hi:"कटोरी ढक दें और पूछें 'बिना गिने, कितने हैं लगता है?' फिर साथ में गिनकर जांचें।", en:"Cover the bowl and ask 'without counting, how many do you think there are?' Then count together to check."}
+            ],
+            fallback:{hi:"7-8 पर अटकें तो 5 तक वापस जाकर वहीं से आगे बढ़ें।", en:"If they get stuck around 7-8, go back to 5 and continue from there."} }
+        } },
+      { category:"utensils", title_hi:"एक-एक चम्मच", title_en:"One spoon each",
+        materials_hi:"चार-पांच छोटे कप, एक-एक चम्मच", materials_en:"4-5 small cups, one spoon each", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"बच्चे से कहें कि हर कप में बिल्कुल एक चम्मच दे।", en:"Ask the child to give exactly one spoon to each cup."},
+          {hi:"बाद में साथ मिलकर कप गिनें।", en:"Count the cups together after."}
+        ],
+        fallback:{hi:"खाली कप की तरफ़ इशारा करें और पूछें 'क्या इसमें अभी चम्मच है?'", en:"Point to an empty cup and ask 'does this one have a spoon yet?'"},
+        skill_hi:"एक-दूसरे से मिलान", skill_en:"One-to-one correspondence",
+        checkIn:[{hi:"क्या बच्चे ने हर कप में बिल्कुल एक चम्मच दी?", en:"Did the child give exactly one spoon per cup?"}],
+        tiers:{
+          easier:{ materials_hi:"दो-तीन छोटे कप, एक-एक चम्मच", materials_en:"2-3 small cups, one spoon each",
+            steps:[
+              {hi:"बच्चे से कहें कि हर कप में एक चम्मच दे।", en:"Ask the child to give one spoon to each cup."},
+              {hi:"साथ में कप गिनें।", en:"Count the cups together."}
+            ],
+            fallback:{hi:"खाली कप की तरफ़ इशारा करें और पूछें 'क्या इसमें चम्मच है?'", en:"Point to an empty cup and ask 'does this one have a spoon?'"} },
+          harder:{ materials_hi:"छह-सात छोटे कप, एक-एक चम्मच", materials_en:"6-7 small cups, one spoon each",
+            steps:[
+              {hi:"बच्चे से कहें कि हर कप में बिल्कुल एक चम्मच दे।", en:"Ask the child to give exactly one spoon to each cup."},
+              {hi:"बाद में पूछें 'कुल कितने कप हैं?' — बिना दोबारा गिनने में मदद किए।", en:"Afterward ask 'how many cups in total?' without helping them recount."}
+            ],
+            fallback:{hi:"कप जोड़ियों में गिनने में मदद करें: 'दो, चार, छह...'", en:"Help count the cups in pairs: 'two, four, six...'"} }
+        } },
+      { category:"pulses", title_hi:"पांच छोटी दालें", title_en:"Five little dals",
+        materials_hi:"दाल के पांच दाने", materials_en:"5 dal grains", minutes:"5 मिनट / 5 min",
+        steps:[
+          {hi:"पांचों को कतार में रखकर साथ में गिनें।", en:"Line up and count all 5 together."},
+          {hi:"एक हटाएं, बाकी बचे हुए गिनें।", en:"Take one away, count what's left."}
+        ],
+        fallback:{hi:"कुछ दिन 1-2-3 पर ही रहें, फिर 4 और 5 जोड़ें।", en:"Stay at 1-2-3 for a few days before adding 4 and 5."},
+        skill_hi:"गिनती, संख्या की समझ", skill_en:"Counting, number sense",
+        checkIn:[{hi:"क्या बच्चा सही तरीक़े से पांचों गिन पाया?", en:"Could the child count all 5 correctly?"},{hi:"क्या बच्चा बता पाया एक हटाने के बाद कितनी बची?", en:"Could the child say how many were left after one was removed?"}],
+        tiers:{
+          easier:{ materials_hi:"दाल के तीन दाने", materials_en:"3 dal grains",
+            steps:[
+              {hi:"तीनों को कतार में रखकर साथ में गिनें।", en:"Line up all 3 and count them together."}
+            ],
+            fallback:{hi:"एक-एक दाना उठाते हुए साथ में गिनती बोलें।", en:"Say the count out loud together as each piece is picked up."} },
+          harder:{ materials_hi:"दाल के पांच दाने", materials_en:"5 dal grains",
+            steps:[
+              {hi:"पांचों को गिनकर रखें।", en:"Count all 5 into place."},
+              {hi:"दो हटाएं, और पूछें 'हटाने से पहले बताओ, कितनी बचेंगी?' फिर साथ में जांचें।", en:"Take away 2, but first ask 'before we check, how many do you think will be left?' Then count together to check."}
+            ],
+            fallback:{hi:"एक-एक करके हटाएं और हर बार बची हुई गिनती बोलें।", en:"Remove one at a time, saying the remaining count each time."} }
+        } }
+    ],
+    nov: [
+      { category:"pulses", title_hi:"दाल का पैटर्न", title_en:"Dal pattern row", needs:["colour"],
+        materials_hi:"दो रंग की दाल", materials_en:"two colours of dal", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"पीली, लाल, पीली, लाल कतार में रखें।", en:"Lay yellow, red, yellow, red in a row."},
+          {hi:"बच्चे से कहें कि अगली दाल रखे।", en:"Ask the child to add the next one."}
+        ],
+        fallback:{hi:"कतार को ढक दें और पूछें 'आगे क्या आता है?' — हर बार धीरे इशारा करें।", en:"Cover the row and ask 'what comes after yellow, red, yellow, red?' pointing slower each time."},
+        skill_hi:"पैटर्न बनाना", skill_en:"Patterning",
+        checkIn:[{hi:"क्या बच्चा रंग का पैटर्न सही आगे बढ़ा पाया?", en:"Could the child continue the colour pattern correctly?"}],
+        checkInOptional:[{hi:"क्या बच्चा बिना देखे अपना ख़ुद का नया पैटर्न बना पाया?", en:"Was the child able to make a new pattern of their own, without copying?"}],
+        tiers:{
+          easier:{ materials_hi:"दो रंग की दाल", materials_en:"2 colours of dal",
+            steps:[
+              {hi:"पीली, लाल, पीली, लाल — चार दाने कतार में रखें।", en:"Lay yellow, red, yellow, red — 4 pieces in a row."},
+              {hi:"पूछें 'आगे कौन सा रंग आएगा?' — बच्चा सिर्फ़ बताए, रखे नहीं।", en:"Ask 'what colour comes next?' — the child just says it, doesn't place it."}
+            ],
+            fallback:{hi:"पैटर्न को धीरे बोलते हुए दोहराएं: 'पीला, लाल, पीला, लाल, फिर...?'", en:"Say the pattern slowly: 'yellow, red, yellow, red, then...?'"} },
+          harder:{ materials_hi:"तीन रंग की दाल", materials_en:"3 colours of dal",
+            steps:[
+              {hi:"पीली, लाल, हरी — तीन रंग की कतार शुरू करें।", en:"Start a row using three colours — yellow, red, green."},
+              {hi:"बच्चे से कहें पैटर्न आगे बढ़ाए।", en:"Ask the child to continue the pattern."}
+            ],
+            fallback:{hi:"पहले सिर्फ़ दो रंग पर वापस जाएं, फिर तीसरा रंग दोबारा जोड़ें।", en:"Go back to just 2 colours for a bit, then reintroduce the third."} }
+        } },
+      { category:"utensils", title_hi:"चम्मच-कटोरी-चम्मच-कटोरी", title_en:"Spoon-bowl-spoon-bowl",
+        materials_hi:"दो चम्मच, दो कटोरी", materials_en:"2 spoons, 2 katoris", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"चम्मच, कटोरी, चम्मच, कटोरी कतार में रखें।", en:"Lay spoon, bowl, spoon, bowl in a line."},
+          {hi:"बच्चे से कहें कि इसे आगे बढ़ाए।", en:"Ask the child to continue it."}
+        ],
+        fallback:{hi:"शुरुआत की तरफ़ इशारा करें और कहें 'आगे क्या?'", en:"Point back to the start and count 'spoon, bowl, spoon, bowl... what's next?'"},
+        skill_hi:"अलग चीज़ों से पैटर्न", skill_en:"Patterning with object type",
+        checkIn:[{hi:"क्या बच्चा चीज़ों का पैटर्न सही आगे बढ़ा पाया?", en:"Could the child continue the object pattern correctly?"}],
+        checkInOptional:[{hi:"क्या बच्चा बिना देखे अपना ख़ुद का नया पैटर्न बना पाया?", en:"Was the child able to make a new pattern of their own, without copying?"}],
+        tiers:{
+          easier:{ materials_hi:"दो चम्मच, दो कटोरी", materials_en:"2 spoons, 2 katoris",
+            steps:[
+              {hi:"चम्मच, कटोरी, चम्मच, कटोरी — कतार बनाकर दिखाएं।", en:"Build and show the row: spoon, bowl, spoon, bowl."},
+              {hi:"कतार को बिगाड़ दें, बच्चे से कहें वैसा ही बनाए।", en:"Mix up the row, then ask the child to rebuild it exactly the same."}
+            ],
+            fallback:{hi:"एक-एक चीज़ रखते हुए साथ में नाम बोलें: 'चम्मच... कटोरी...'", en:"Place each item one at a time, naming it aloud together: 'spoon... bowl...'"} },
+          harder:{ materials_hi:"दो चम्मच, दो कटोरी", materials_en:"2 spoons, 2 katoris",
+            steps:[
+              {hi:"साथ मिलकर चम्मच-कटोरी-चम्मच-कटोरी कतार बनाएं।", en:"Build the spoon-bowl-spoon-bowl row together."},
+              {hi:"कतार का एक हिस्सा कपड़े से ढक दें, पूछें 'नीचे क्या छुपा है?'", en:"Cover part of the row with a cloth, ask 'what's hidden underneath?'"}
+            ],
+            fallback:{hi:"ढकने से पहले उस हिस्से की तरफ़ इशारा करके एक बार याद दिलाएं।", en:"Point to that part once as a reminder just before covering it."} }
+        } },
+      { category:"vegetables", title_hi:"प्याज़-आलू-आलू पैटर्न", title_en:"Onion-potato-potato pattern", needs:["colour"],
+        materials_hi:"एक प्याज़, दो-तीन आलू", materials_en:"1 onion, 2-3 potatoes", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"प्याज़, आलू, आलू, प्याज़, आलू, आलू रखें।", en:"Lay out onion, potato, potato, onion, potato, potato."},
+          {hi:"पूछें आगे क्या आता है।", en:"Ask what comes next."}
+        ],
+        fallback:{hi:"कुछ दिन आसान पैटर्न पर वापस जाएं, फिर दोबारा यह आज़माएं।", en:"Go back to the simpler AB pattern for a few more days before trying ABB again."},
+        skill_hi:"बड़ा पैटर्न बनाना", skill_en:"Extended patterning",
+        checkIn:[{hi:"क्या बच्चा यह पैटर्न सही आगे बढ़ा पाया?", en:"Could the child continue the ABB pattern correctly?"}],
+        checkInOptional:[{hi:"क्या बच्चा बिना देखे अपना ख़ुद का नया पैटर्न बना पाया?", en:"Was the child able to make a new pattern of their own, without copying?"}],
+        tiers:{
+          easier:{ materials_hi:"एक प्याज़, एक आलू", materials_en:"1 onion, 1 potato",
+            steps:[
+              {hi:"प्याज़, आलू, प्याज़, आलू — कतार में रखें।", en:"Lay onion, potato, onion, potato in a row."},
+              {hi:"पूछें आगे क्या आता है।", en:"Ask what comes next."}
+            ],
+            fallback:{hi:"कतार को धीरे बोलते हुए दोहराएं: 'प्याज़, आलू, प्याज़, आलू, फिर...?'", en:"Say the row slowly: 'onion, potato, onion, potato, then...?'"} },
+          harder:{ materials_hi:"एक प्याज़, दो-तीन आलू", materials_en:"1 onion, 2-3 potatoes",
+            steps:[
+              {hi:"इस बार आलू, प्याज़, प्याज़ से पैटर्न शुरू करें (पहले जैसे उल्टा)।", en:"This time start the pattern potato, onion, onion (the reverse of before)."},
+              {hi:"पूछें आगे क्या आता है।", en:"Ask what comes next."}
+            ],
+            fallback:{hi:"पहले जो पैटर्न सीखा था वह याद दिलाएं, फिर बताएं कि आज क्रम उल्टा है।", en:"Remind them of the pattern they learned before, then point out today's order is flipped."} }
+        } }
+    ],
+    dec: [
+      { category:"pulses", title_hi:"बड़ी लाल, छोटी पीली", title_en:"Big red, small yellow", needs:["colour","size"],
+        materials_hi:"अलग-अलग आकार और रंग की दालें", materials_en:"pulses of different sizes and colours", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"सारी दालें आपस में मिला लें।", en:"Mix all the pulses together."},
+          {hi:"बच्चे से कहें कि आकार और रंग दोनों से चार ढेर बनाए।", en:"Ask the child to make four piles by size and colour combined."}
+        ],
+        fallback:{hi:"पहले आकार से बड़ा/छोटा अलग करें, फिर हर ढेर में रंग से अलग करें।", en:"Sort by size first into big/small, then sort by colour within each pile."},
+        skill_hi:"दो तरीकों से वर्गीकरण", skill_en:"Two-attribute classification",
+        checkIn:[{hi:"क्या बच्चा आकार के हिसाब से अलग कर पाया?", en:"Could the child sort by size?"},{hi:"क्या बच्चा फिर हर समूह में रंग से अलग कर पाया?", en:"Could the child then sort by colour within each size group?"}],
+        tiers:{
+          easier:{ materials_hi:"अलग-अलग रंग की दालें (एक ही आकार)", materials_en:"pulses of different colours (one size)",
+            steps:[
+              {hi:"सारी दालें मिला लें।", en:"Mix all the pulses together."},
+              {hi:"बच्चे से कहें सिर्फ़ रंग के हिसाब से ढेर बनाए।", en:"Ask the child to make piles by colour only."}
+            ],
+            fallback:{hi:"एक-एक दाना उठाकर पूछें 'यह कौन से रंग के ढेर में जाएगा?'", en:"Pick up one piece at a time and ask 'which colour pile does this go in?'"} },
+          harder:{ materials_hi:"अलग-अलग आकार और रंग की दालें", materials_en:"pulses of different sizes and colours",
+            steps:[
+              {hi:"सारी दालें मिलाकर आकार और रंग से चार ढेर बनवाएं।", en:"Mix and sort into four piles by size and colour, as before."},
+              {hi:"फिर पूछें 'क्या हम इसे किसी और तरीक़े से भी बाँट सकते हैं?' — बच्चे को दूसरा तरीक़ा खोजने दें।", en:"Then ask 'can we sort this a different way too?' — let the child find another way."}
+            ],
+            fallback:{hi:"एक और तरीक़ा सुझाएं: 'आकार की बजाय, क्या हम गिनती से बाँट सकते हैं?'", en:"Suggest one option: 'instead of size, could we sort by count?'"} }
+        } },
+      { category:"mixed", title_hi:"यहाँ क्या है?", title_en:"What belongs here?",
+        materials_hi:"प्याज़, लहसुन, अदरक और एक चम्मच या कटोरी", materials_en:"onion, garlic, ginger + one spoon or bowl", minutes:"10 मिनट / 10 min",
+        steps:[{hi:"समूह रखें, पूछें कौन सी चीज़ अलग है और क्यों।", en:"Lay out the group, ask which item doesn't belong and why."}],
+        fallback:{hi:"इसके बजाय पूछें: 'हम किन चीज़ों से पकाते हैं, और किसमें पकाते हैं?'", en:"Ask instead: 'which ones do we cook with, and which one do we cook in?'"},
+        skill_hi:"समूह की समझ", skill_en:"Set understanding",
+        checkIn:[{hi:"क्या बच्चा अलग चीज़ पहचान पाया?", en:"Could the child identify the item that didn't belong?"},{hi:"क्या बच्चा बता पाया क्यों?", en:"Could the child explain why?"}],
+        tiers:{
+          easier:{ materials_hi:"प्याज़, लहसुन, अदरक और एक चम्मच या कटोरी", materials_en:"onion, garlic, ginger + one spoon or bowl",
+            steps:[
+              {hi:"समूह रखें, पूछें कौन सी चीज़ अलग है।", en:"Lay out the group, ask which item doesn't belong."}
+            ],
+            fallback:{hi:"दो विकल्प दें: 'यह या यह?'", en:"Offer two choices: 'this one or this one?'"} },
+          harder:{ materials_hi:"प्याज़, लहसुन, अदरक और एक चम्मच या कटोरी", materials_en:"onion, garlic, ginger + one spoon or bowl",
+            steps:[
+              {hi:"समूह रखें, पूछें कौन सी चीज़ अलग है और क्यों।", en:"Lay out the group, ask which item doesn't belong and why."},
+              {hi:"फिर पूछें 'इसकी जगह क्या होना चाहिए था?'", en:"Then ask 'what should have been there instead?'"}
+            ],
+            fallback:{hi:"पूछें 'हम किन चीज़ों से पकाते हैं, और किसमें पकाते हैं?'", en:"Ask 'which ones do we cook with, and which one do we cook in?'"} }
+        } },
+      { category:"mixed", title_hi:"दो डिब्बों में छँटाई", title_en:"Two-box sort",
+        materials_hi:"दो डिब्बे, गोल/चौकोर, हल्के/गहरे रंग की चीज़ें", materials_en:"2 boxes, mixed round/square light/dark items", minutes:"10 मिनट / 10 min",
+        steps:[{hi:"मिली-जुली चीज़ों को दो नियमों से दो डिब्बों में बाँटें।", en:"Sort the mixed pile into the two boxes by two rules."}],
+        fallback:{hi:"साथ में सोचकर बोलें: 'क्या यह गोल है? हाँ। हल्का या गहरा? हल्का। तो यहाँ जाएगा।'", en:"Think aloud together: 'is it round? yes. Is it light or dark? light. So it goes here.'"},
+        skill_hi:"दो तरीकों से वर्गीकरण", skill_en:"Two-attribute classification",
+        checkIn:[{hi:"क्या बच्चा दोनों नियमों से सही छँटाई कर पाया?", en:"Could the child sort correctly using both rules?"}],
+        tiers:{
+          easier:{ materials_hi:"दो डिब्बे, गोल और चौकोर चीज़ें", materials_en:"2 boxes, round and square items",
+            steps:[
+              {hi:"मिली-जुली चीज़ों को सिर्फ़ आकार के हिसाब से दो डिब्बों में बाँटें।", en:"Sort the mixed pile into the two boxes by shape only."}
+            ],
+            fallback:{hi:"साथ में बोलें: 'क्या यह गोल है? हाँ, तो यहाँ जाएगा।'", en:"Say it aloud together: 'is it round? yes, so it goes here.'"} },
+          harder:{ materials_hi:"दो डिब्बे, गोल/चौकोर, हल्के/गहरे रंग की चीज़ें, एक ऐसी चीज़ जो दोनों तरह की लगे", materials_en:"2 boxes, round/square, light/dark items, plus one item that could reasonably fit either way",
+            steps:[
+              {hi:"मिली-जुली चीज़ों को दो नियमों से बाँटें, जैसे पहले किया।", en:"Sort by two rules as before."},
+              {hi:"उलझन वाली चीज़ पर पूछें 'तुमने इसे यहाँ क्यों रखा?'", en:"For the tricky item, ask 'why did you put it here?'"}
+            ],
+            fallback:{hi:"उलझन वाली चीज़ को दोनों डिब्बों के पास बारी-बारी रखकर सोचें कि कौन सा बेहतर लगता है।", en:"Hold the tricky item near each box in turn and think through which fits better."} }
+        } }
+    ],
+    jan: [
+      { category:"pulses", title_hi:"दस तक दाल गिनो", title_en:"Count to ten dal",
+        materials_hi:"दाल के दस दाने", materials_en:"10 dal grains", minutes:"5 मिनट / 5 min",
+        steps:[{hi:"अक्टूबर वाली गिनती जारी रखें, अब 10 तक।", en:"Continue counting from October, now to 10."}],
+        fallback:{hi:"अगर 6-7 के बाद भूल जाए: 5 तक गिनें, रुकें, फिर दोबारा शुरू करें।", en:"If they lose track past 6-7: count to 5, pause, and restart the count."},
+        skill_hi:"10 तक गिनती", skill_en:"Counting to 10",
+        checkIn:[{hi:"क्या बच्चा 5 के बाद भी सही गिन पाया?", en:"Could the child count accurately past 5?"},{hi:"क्या बच्चा 10 तक पहुँच पाया?", en:"Could the child reach 10?"}],
+        tiers:{
+          easier:{ materials_hi:"दाल के सात दाने", materials_en:"7 dal grains",
+            steps:[
+              {hi:"सितंबर वाली गिनती जारी रखें, अब 7 तक।", en:"Continue the counting from before, now to 7."}
+            ],
+            fallback:{hi:"5 तक गिनें, रुकें, फिर दोबारा शुरू करें।", en:"Count to 5, pause, then restart."} },
+          harder:{ materials_hi:"दाल के दस दाने", materials_en:"10 dal grains",
+            steps:[
+              {hi:"10 तक गिनें।", en:"Count up to 10."},
+              {hi:"फिर 10 से 1 तक उल्टा गिनने की कोशिश करें।", en:"Then try counting backward from 10 to 1."}
+            ],
+            fallback:{hi:"उल्टी गिनती में अटकें तो हर संख्या साथ में धीरे बोलें।", en:"If they get stuck counting backward, say each number together slowly."} }
+        } },
+      { category:"pulses", title_hi:"दो छोटे समूह मिलकर एक", title_en:"Two small groups become one",
+        materials_hi:"दो छोटे ढेरों में बंटी दाल", materials_en:"pulses split into two small piles", minutes:"10 मिनट / 10 min",
+        steps:[
+          {hi:"हर ढेर को अलग-अलग गिनें।", en:"Count each pile separately."},
+          {hi:"दोनों ढेरों को मिलाएं, कुल गिनें।", en:"Push both piles together, count the total."}
+        ],
+        fallback:{hi:"ढेरों को मिलाते हुए कहें '3 और 2 और, अब सब साथ में।'", en:"Physically move the piles together while saying '3 and 2 more, all together now.'"},
+        skill_hi:"जोड़ की शुरुआत", skill_en:"Early addition",
+        checkIn:[{hi:"क्या बच्चे ने हर ढेर अलग-अलग गिना?", en:"Did the child count each pile separately?"},{hi:"क्या बच्चा मिलाकर कुल गिन पाया?", en:"Could the child count the combined total?"}],
+        tiers:{
+          easier:{ materials_hi:"दो छोटे ढेर — एक में दो, दूसरे में एक दाना", materials_en:"2 small piles — 2 in one, 1 in the other",
+            steps:[
+              {hi:"हर ढेर को अलग-अलग गिनें।", en:"Count each pile separately."},
+              {hi:"दोनों मिलाएं, कुल गिनें।", en:"Push both piles together, count the total."}
+            ],
+            fallback:{hi:"मिलाते हुए कहें '2 और 1, अब सब साथ में।'", en:"While combining, say '2 and 1, all together now.'"} },
+          harder:{ materials_hi:"तीन छोटे ढेरों में बंटी दाल", materials_en:"pulses split into 3 small piles",
+            steps:[
+              {hi:"तीनों ढेरों को अलग-अलग गिनें।", en:"Count each of the three piles separately."},
+              {hi:"तीनों मिलाएं, कुल गिनें।", en:"Push all three together, count the total."}
+            ],
+            fallback:{hi:"दो ढेर पहले मिलाएं और गिनें, फिर तीसरा जोड़ें।", en:"Combine two piles first and count, then add the third."} }
+        } },
+      { category:"utensils", title_hi:"ढक्कन गिनकर डालो", title_en:"Bottle cap toss count",
+        materials_hi:"10 तक बोतल के ढक्कन", materials_en:"up to 10 bottle caps", minutes:"5 मिनट / 5 min",
+        steps:[{hi:"एक-एक ढक्कन कटोरी में डालें, ज़ोर से गिनते हुए।", en:"Drop the caps into a bowl one at a time, counting aloud."}],
+        fallback:{hi:"डालने की रफ़्तार धीमी रखें ताकि गिनती और काम साथ मिले।", en:"Slow the pace of dropping so the counting word matches the action exactly."},
+        skill_hi:"एक-दूसरे से मिलान", skill_en:"One-to-one correspondence",
+        checkIn:[{hi:"क्या बच्चा हर ढक्कन को सही गिन पाया?", en:"Could the child count each drop accurately?"}],
+        tiers:{
+          easier:{ materials_hi:"पांच तक बोतल के ढक्कन", materials_en:"up to 5 bottle caps",
+            steps:[
+              {hi:"एक-एक ढक्कन कटोरी में डालें, गिनते हुए।", en:"Drop the caps into a bowl one at a time, counting aloud."}
+            ],
+            fallback:{hi:"डालने की रफ़्तार धीमी रखें ताकि गिनती साथ मिले।", en:"Slow the pace so the counting word matches each drop."} },
+          harder:{ materials_hi:"10 तक बोतल के ढक्कन, दो रंग में", materials_en:"up to 10 bottle caps, in 2 colours",
+            steps:[
+              {hi:"एक-एक ढक्कन डालें, गिनते हुए, 10 तक।", en:"Drop the caps one at a time, counting to 10."},
+              {hi:"पूछें 'किस रंग के ढक्कन ज़्यादा थे?'", en:"Ask 'were there more caps of one colour?'"}
+            ],
+            fallback:{hi:"दोनों रंगों को अलग-अलग ढेर में रखकर लंबाई से तुलना करें।", en:"Put each colour in its own pile and compare which row is longer."} }
+        } }
+    ],
+    feb: [
+      { category:"vegetables", title_hi:"कौन सा अलग है", title_en:"Odd one out",
+        materials_hi:"तीन जड़ वाली सब्ज़ियाँ और एक बर्तन", materials_en:"3 root vegetables + 1 utensil", minutes:"5 मिनट / 5 min",
+        steps:[{hi:"चारों चीज़ें रखें, पूछें कौन सी अलग है।", en:"Lay out all 4 items, ask which one doesn't belong."}],
+        fallback:{hi:"दो विकल्प दें: 'दिखने की वजह से अलग, या इस्तेमाल की वजह से?'", en:"Offer two choices: 'is it because of what it looks like, or what we do with it?'"},
+        skill_hi:"श्रेणी बनाना", skill_en:"Categorisation",
+        checkIn:[{hi:"क्या बच्चा अलग चीज़ चुन पाया?", en:"Could the child pick the item that didn't belong?"}],
+        tiers:{
+          easier:{ materials_hi:"दो जड़ वाली सब्ज़ियाँ और एक बर्तन", materials_en:"2 root vegetables + 1 utensil",
+            steps:[
+              {hi:"तीनों चीज़ें रखें, पूछें कौन सी अलग है।", en:"Lay out all 3 items, ask which one doesn't belong."}
+            ],
+            fallback:{hi:"दो चीज़ें पास रखकर पूछें 'यह एक जैसा या अलग?'", en:"Hold two items close and ask 'same or different?'"} },
+          harder:{ materials_hi:"तीन जड़ वाली सब्ज़ियाँ और एक बर्तन", materials_en:"3 root vegetables + 1 utensil",
+            steps:[
+              {hi:"चारों चीज़ें रखें।", en:"Lay out all 4 items."},
+              {hi:"पूछें कौन सी अलग है — फिर पूछें 'क्या कोई और वजह से भी कोई अलग हो सकती है?'", en:"Ask which one doesn't belong — then ask 'could a different one be the odd one out for a different reason?'"}
+            ],
+            fallback:{hi:"दो विकल्प दें: 'दिखने की वजह से अलग, या इस्तेमाल की वजह से?'", en:"Offer two choices: 'different because of how it looks, or what we use it for?'"} }
+        } },
+      { category:"mixed", title_hi:"यह किस समूह में है?", title_en:"What group is it?",
+        materials_hi:"सब्ज़ियों और बर्तनों का मेल", materials_en:"a mix of vegetables and utensils", minutes:"10 मिनट / 10 min",
+        steps:[{hi:"बच्चे से कहें 'खाने की चीज़ें' और 'पकाने के बर्तन' में बाँटे।", en:"Ask the child to sort into 'things we eat' and 'things we cook with'."}],
+        fallback:{hi:"मुश्किल चीज़ों के बारे में सुधारने की बजाय साथ मिलकर बात करें।", en:"Talk through boundary cases together rather than correcting."},
+        skill_hi:"श्रेणी बनाना", skill_en:"Categorisation",
+        checkIn:[{hi:"क्या बच्चा चीज़ों को सही दो समूहों में बाँट पाया?", en:"Could the child sort items into the two groups correctly?"}],
+        tiers:{
+          easier:{ materials_hi:"सब्ज़ियों और बर्तनों का मेल", materials_en:"a mix of vegetables and utensils",
+            steps:[
+              {hi:"आधी चीज़ें ख़ुद बाँटकर दिखाएं।", en:"Sort half the items yourself as an example."},
+              {hi:"बाकी बच्चे से बंटवाएं।", en:"Have the child finish sorting the rest."}
+            ],
+            fallback:{hi:"हर चीज़ पर पूछें 'क्या इसे हम खाते हैं?'", en:"For each item, ask 'do we eat this?'"} },
+          harder:{ materials_hi:"सब्ज़ियों, बर्तनों और डिब्बों का मेल", materials_en:"a mix of vegetables, utensils, and storage containers",
+            steps:[
+              {hi:"बच्चे से कहें 'खाने की चीज़ें', 'पकाने के बर्तन', और 'रखने के डिब्बे' — तीन समूहों में बाँटे।", en:"Ask the child to sort into three groups: 'things we eat,' 'things we cook with,' and 'things we store food in.'"}
+            ],
+            fallback:{hi:"एक समूह पर ध्यान दें, बाक़ी दो को बाद के लिए छोड़ें।", en:"Focus on one group at a time, leaving the other two for after."} }
+        } },
+      { category:"any", title_hi:"बताओ यह क्या है", title_en:"Describe it",
+        materials_hi:"रसोई की कोई एक चीज़, पहले छुपाई हुई", materials_en:"any one kitchen item, hidden at first", minutes:"5 मिनट / 5 min",
+        steps:[{hi:"बिना नाम बताए, चीज़ की दो ख़ासियतें बताएं।", en:"Describe the object using two features without naming it."}],
+        fallback:{hi:"वही दो बातें दोहराने की बजाय एक और सुराग दें।", en:"Add one more clue rather than repeating the same two."},
+        skill_hi:"वर्णन करने वाले शब्द", skill_en:"Descriptive vocabulary",
+        checkIn:[{hi:"क्या बच्चा दो सुरागों से चीज़ पहचान पाया?", en:"Could the child guess the object from two clues?"}],
+        tiers:{
+          easier:{ materials_hi:"रसोई की कोई एक चीज़, थोड़ी दिखती हुई", materials_en:"any one kitchen item, partly visible",
+            steps:[
+              {hi:"चीज़ को आधा ढककर दो ख़ासियतें बताएं।", en:"Half-cover the object and describe two features."}
+            ],
+            fallback:{hi:"चीज़ को थोड़ा और दिखाएं और सुराग दोहराएं।", en:"Reveal a bit more of the object and repeat the clue."} },
+          harder:{ materials_hi:"रसोई की कोई एक चीज़, पहले छुपाई हुई", materials_en:"any one kitchen item, hidden at first",
+            steps:[
+              {hi:"बिना नाम बताए, चीज़ की सिर्फ़ एक ख़ासियत बताएं।", en:"Describe the object using just one feature, without naming it."}
+            ],
+            fallback:{hi:"एक और सुराग जोड़ें, वही सुराग न दोहराएं।", en:"Add one more clue rather than repeating the same one."} }
+        } }
+    ],
+    mar: [
+      { category:"any", title_hi:"रसोई की कहानी", title_en:"Kitchen story time",
+        materials_hi:"बच्चे की चुनी हुई कोई तीन चीज़ें", materials_en:"any 3 items the child picks", minutes:"10 मिनट / 10 min",
+        steps:[{hi:"बच्चा तीन चीज़ें चुने और तीनों से एक छोटी कहानी बनाएं।", en:"Child picks 3 items. Make up a short story using all three."}],
+        fallback:{hi:"आप वाक्य शुरू करें ('एक बार की बात है...') और बच्चे को पूरा करने दें।", en:"Parent starts the sentence ('once there was a...') and lets the child finish it."},
+        skill_hi:"बोलकर कहानी सुनाना", skill_en:"Oral storytelling",
+        checkIn:[{hi:"क्या बच्चा चीज़ों से वाक्य या कहानी बना पाया?", en:"Could the child make up a sentence or story using the objects?"}],
+        tiers:{
+          easier:{ materials_hi:"बच्चे की चुनी हुई कोई दो चीज़ें", materials_en:"any 2 items the child picks",
+            steps:[
+              {hi:"बच्चा दो चीज़ें चुने और दोनों से एक छोटी कहानी बनाएं।", en:"Child picks 2 items. Make up a short story using both."}
+            ],
+            fallback:{hi:"आप वाक्य शुरू करें और बच्चे को पूरा करने दें।", en:"Parent starts the sentence and lets the child finish it."} },
+          harder:{ materials_hi:"बच्चे की चुनी हुई चार-पांच चीज़ें", materials_en:"any 4-5 items the child picks",
+            steps:[
+              {hi:"बच्चा चीज़ें चुने और कहानी बनाए — पूछें 'पहले क्या हुआ, फिर क्या, और आख़िर में क्या?'", en:"Child picks the items and builds a story — ask 'what happened first, then what, and how did it end?'"}
+            ],
+            fallback:{hi:"हर हिस्से के लिए एक सवाल पूछकर मदद करें: 'पहले क्या हुआ?'", en:"Help with one question per part: 'what happened first?'"} }
+        } },
+      { category:"mixed", title_hi:"बड़ी छँटाई चुनौती", title_en:"Big sort challenge",
+        materials_hi:"सब चीज़ों का बड़ा मिला-जुला ढेर", materials_en:"a large mixed pile of everything", minutes:"10 मिनट / 10 min",
+        steps:[{hi:"पूरे ढेर को पहले किसी तरीक़े से, फिर दूसरे तरीक़े से बाँटें।", en:"Sort the whole pile any way first, then a second way."}],
+        fallback:{hi:"कहें 'बहुत बढ़िया! अब क्या हम इसे बिल्कुल अलग तरीक़े से बाँट सकते हैं?'", en:"Prompt with 'good! now can we sort it a totally different way?'"},
+        skill_hi:"लचीला वर्गीकरण", skill_en:"Flexible classification",
+        checkIn:[{hi:"क्या बच्चा ढेर को दूसरे अलग तरीक़े से बाँट पाया?", en:"Could the child sort the pile a second, different way?"}],
+        tiers:{
+          easier:{ materials_hi:"सब चीज़ों का मिला-जुला ढेर", materials_en:"a mixed pile of everything",
+            steps:[
+              {hi:"कहें 'चलो पहले रंग के हिसाब से बाँटते हैं' — तरीक़ा ख़ुद बता दें।", en:"Say 'let's sort by colour first' — give the rule directly."}
+            ],
+            fallback:{hi:"एक-एक चीज़ उठाकर साथ में रंग पहचानें।", en:"Pick up one item at a time and name its colour together."} },
+          harder:{ materials_hi:"सब चीज़ों का बड़ा मिला-जुला ढेर", materials_en:"a large mixed pile of everything",
+            steps:[
+              {hi:"पूरे ढेर को पहले किसी तरीक़े से, फिर दूसरे तरीक़े से बाँटें, जैसा पहले किया।", en:"Sort the whole pile one way, then a second way, as before."},
+              {hi:"फिर पूछें 'क्या हम इसे तीसरे तरीक़े से भी बाँट सकते हैं?'", en:"Then ask 'can we sort it a third way too?'"}
+            ],
+            fallback:{hi:"याद दिलाएं कि पहले किन दो तरीक़ों से बाँटा था, फिर तीसरा तरीक़ा साथ में सोचें।", en:"Remind them of the two ways used already, then think of a third together."} }
+        } },
+      { category:"pulses", title_hi:"पैटर्न और गिनती", title_en:"Pattern + count finale", needs:["colour"],
+        materials_hi:"दो रंग की दाल", materials_en:"pulses of 2 colours", minutes:"10 मिनट / 10 min",
+        steps:[{hi:"बच्चा अपना रंग पैटर्न बनाए, फिर हर रंग की गिनती करें।", en:"Child builds their own colour pattern. Count how many of each colour were used."}],
+        fallback:{hi:"शुरुआत में 2-3 दाल रखकर पैटर्न शुरू करें, फिर बच्चे को दें।", en:"Begin the pattern for them with 2-3 items and hand it over."},
+        skill_hi:"पैटर्न और गिनती", skill_en:"Patterning + counting",
+        checkIn:[{hi:"क्या बच्चा अपना ख़ुद का पैटर्न बना पाया?", en:"Could the child build their own pattern?"},{hi:"क्या बच्चा गिन पाया हर रंग की कितनी दाल इस्तेमाल हुई?", en:"Could the child count how many of each colour were used?"}],
+        tiers:{
+          easier:{ materials_hi:"दो रंग की दाल", materials_en:"pulses of 2 colours",
+            steps:[
+              {hi:"पैटर्न के पहले चार दाने ख़ुद रखें, बच्चे से आगे बढ़ाने को कहें।", en:"Place the first 4 pieces of the pattern yourself, ask the child to continue it."},
+              {hi:"फिर हर रंग की गिनती करें।", en:"Then count how many of each colour."}
+            ],
+            fallback:{hi:"पैटर्न को धीरे बोलते हुए दोहराएं इससे पहले कि बच्चा अगला दाना रखे।", en:"Say the pattern slowly before the child places the next piece."} },
+          harder:{ materials_hi:"दो रंग की दाल", materials_en:"pulses of 2 colours",
+            steps:[
+              {hi:"बच्चा अपना रंग पैटर्न बनाए, फिर हर रंग की गिनती करें।", en:"Child builds their own colour pattern. Count how many of each colour were used."},
+              {hi:"पूछें 'किस रंग की ज़्यादा हैं?'", en:"Ask 'which colour has more?'"}
+            ],
+            fallback:{hi:"दोनों रंगों को दो अलग कतारों में रखकर लंबाई से तुलना करें।", en:"Line up both colours in separate rows and compare which row is longer."} }
+        } }
+    ]
+  };
+
+  const TILES = [
+    { key:"pulses", hi:"दाल", en:"Pulses" },
+    { key:"vegetables", hi:"सब्ज़ी", en:"Vegetables" },
+    { key:"spices", hi:"मसाले", en:"Spices" },
+    { key:"utensils", hi:"बर्तन", en:"Utensils" },
+    { key:"dough", hi:"आटा", en:"Dough" },
+    { key:"other", hi:"कुछ और", en:"Something else" }
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  let currentCategory = null;
+  let hasMultipleColours = null;
+  let hasMultipleSizes = null;
+  let currentActivity = null;
+  let currentTier = "on-level";
+
+  // ---------- On-device persistence (localStorage only — never sent anywhere) ----------
+  // Stores: the child's name, and a log of completed activities with their check-in
+  // ratings. Survives reloads/app restarts on this phone so the avatar can grow and
+  // (from month 4) a real pattern across months can inform the next month's activity —
+  // neither of which is possible with in-memory-only state. Still fully local: nothing
+  // here is transmitted unless a later feature (teacher reporting) explicitly sends it.
+  const STORAGE_KEY = "humaraSaathiState";
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return { completions: [] };
+      const parsed = JSON.parse(raw);
+      if(!parsed || typeof parsed !== "object") return { completions: [] };
+      if(!Array.isArray(parsed.completions)) parsed.completions = [];
+      return parsed;
+    }catch(e){
+      console.warn("Could not read saved progress — starting fresh.", e);
+      return { completions: [] };
+    }
+  }
+
+  function saveState(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }catch(e){
+      // Storage can fail (private browsing, full storage, disabled). The app still
+      // works for this one session — it just won't remember progress next time.
+      console.warn("Could not save progress.", e);
+    }
+  }
+
+  let appState = loadState();
+
+  // faces: object like { "0":"easy", "1":"help", "opt0":"hard" } — same keys the
+  // check-in UI already uses, so nothing needs remapping when we read this back later.
+  function recordCompletion(month, activity, faces, tier){
+    appState.completions.push({
+      ts: Date.now(),
+      month: month,
+      activityTitleEn: activity.title_en,
+      category: activity.category,
+      tier: tier || "on-level",
+      faces: faces || {}
+    });
+    saveState();
+    updateTracker();
+  }
+
+  function getTotalCompleted(){
+    return appState.completions.length;
+  }
+
+  function getMonthCompletions(month){
+    return appState.completions.filter(c => c.month === month);
+  }
+
+  // ---------- Adaptive tier decision (hand-written rules, not ML — see project notes) ----------
+  // June-August have no tiered content, so always on-level there. From September, look
+  // only at the immediately preceding month's pattern — not a single rating, not a long
+  // history — to suggest easier/on-level/harder for the month about to be shown.
+  const TIER_START_MONTH = "sep";
+
+  function classifyActivityOutcome(faces){
+    const values = Object.values(faces || {});
+    if(values.length === 0) return "neutral"; // submitted with no faces picked — no signal either way
+    const counts = { easy: 0, help: 0, hard: 0 };
+    values.forEach(v => { if(counts[v] !== undefined) counts[v]++; });
+    if(counts.hard > values.length / 2) return "struggled";
+    if(counts.easy > values.length / 2) return "easy";
+    return "neutral"; // mostly "needed help", or a mixed split — no strong signal
+  }
+
+  function getSuggestedTier(month){
+    const monthIndex = MODULES.findIndex(m => m.id === month);
+    const tierStartIndex = MODULES.findIndex(m => m.id === TIER_START_MONTH);
+    if(monthIndex < 0 || monthIndex < tierStartIndex) return "on-level";
+
+    const prevMonth = MODULES[monthIndex - 1];
+    if(!prevMonth) return "on-level";
+
+    const prevCompletions = getMonthCompletions(prevMonth.id);
+    if(prevCompletions.length < 2) return "on-level"; // not enough of that month done to read a pattern
+
+    const outcomes = prevCompletions.map(c => classifyActivityOutcome(c.faces));
+    const struggled = outcomes.filter(o => o === "struggled").length;
+    const easy = outcomes.filter(o => o === "easy").length;
+
+    if(struggled >= 2) return "easier";
+    if(easy >= 2) return "harder";
+    return "on-level";
+  }
+
+  // ---------- Avatar: a pencil character, drawn in code (no image file) ----------
+  // Grows every time an activity is completed, out of the full year's activity count.
+  // No score/rating involved on purpose — showing up is what's rewarded, not performance.
+  // "Growth" here means the pencil itself gets taller at each stage (stage 0 = short,
+  // stage 5 = full length), anchored to the same base — a real size change per stage,
+  // not just the same picture resized uniformly, so it reads as progress at a glance.
+  const TOTAL_ACTIVITIES = Object.values(ACTIVITIES).reduce((sum, arr) => sum + arr.length, 0);
+  // Six inner-markup strings (rects/paths), one per growth stage, all drawn against the
+  // same shared 200x340 viewBox and anchored to the same bottom edge — only the pencil's
+  // own height changes between stages, so swapping stages within a fixed-size box already
+  // looks like it grew, no container resizing needed.
+  const PENCIL_STAGES = [
+    '<rect x="54.0" y="196.0" width="92.0" height="108.0" fill="#F4B942"/><rect x="64.0" y="198.0" width="14" height="104.0" rx="7" fill="#FFD873" opacity="0.85"/><rect x="126.0" y="198.0" width="14" height="104.0" rx="7" fill="#E0961C" opacity="0.55"/><path d="M54.0 196.0 L146.0 196.0 L111.0 164.0 L100.0 146.0 L89.0 164.0 Z" fill="#F3D9B1" stroke="#D9BE8F" stroke-width="2" stroke-linejoin="round"/><path d="M93.0 166.0 L107.0 166.0 L100.0 146.0 Z" fill="#2B2B2B"/><path d="M54.0 266.0 L146.0 266.0 L146.0 286.0 Q146.0 300.0 132.0 300.0 L68.0 300.0 Q54.0 300.0 54.0 286.0 Z" fill="#F0A6A6"/><rect x="54.0" y="266.0" width="92.0" height="5" fill="#2B2B2B" opacity="0.12"/><path d="M54.0 196.0 L54.0 286.0 Q54.0 300.0 68.0 300.0 L132.0 300.0 Q146.0 300.0 146.0 286.0 L146.0 196.0" fill="none" stroke="#D89428" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="70.0" cy="256.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><ellipse cx="130.0" cy="256.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><circle cx="83.0" cy="246.0" r="9" fill="#fff"/><circle cx="117.0" cy="246.0" r="9" fill="#fff"/><circle cx="85.5" cy="247.5" r="5.6" fill="#2B2B2B"/><circle cx="119.5" cy="247.5" r="5.6" fill="#2B2B2B"/><circle cx="83.5" cy="244.5" r="1.6" fill="#fff"/><circle cx="117.5" cy="244.5" r="1.6" fill="#fff"/><path d="M89.0 262.0 Q100.0 271.0 111.0 262.0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>',
+    '<rect x="54.0" y="170.0" width="92.0" height="134.0" fill="#F4B942"/><rect x="64.0" y="172.0" width="14" height="130.0" rx="7" fill="#FFD873" opacity="0.85"/><rect x="126.0" y="172.0" width="14" height="130.0" rx="7" fill="#E0961C" opacity="0.55"/><path d="M54.0 170.0 L146.0 170.0 L111.0 138.0 L100.0 120.0 L89.0 138.0 Z" fill="#F3D9B1" stroke="#D9BE8F" stroke-width="2" stroke-linejoin="round"/><path d="M93.0 140.0 L107.0 140.0 L100.0 120.0 Z" fill="#2B2B2B"/><path d="M54.0 266.0 L146.0 266.0 L146.0 286.0 Q146.0 300.0 132.0 300.0 L68.0 300.0 Q54.0 300.0 54.0 286.0 Z" fill="#F0A6A6"/><rect x="54.0" y="266.0" width="92.0" height="5" fill="#2B2B2B" opacity="0.12"/><path d="M54.0 170.0 L54.0 286.0 Q54.0 300.0 68.0 300.0 L132.0 300.0 Q146.0 300.0 146.0 286.0 L146.0 170.0" fill="none" stroke="#D89428" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="70.0" cy="230.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><ellipse cx="130.0" cy="230.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><circle cx="83.0" cy="220.0" r="9" fill="#fff"/><circle cx="117.0" cy="220.0" r="9" fill="#fff"/><circle cx="85.5" cy="221.5" r="5.6" fill="#2B2B2B"/><circle cx="119.5" cy="221.5" r="5.6" fill="#2B2B2B"/><circle cx="83.5" cy="218.5" r="1.6" fill="#fff"/><circle cx="117.5" cy="218.5" r="1.6" fill="#fff"/><path d="M89.0 236.0 Q100.0 245.0 111.0 236.0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>',
+    '<rect x="54.0" y="144.0" width="92.0" height="160.0" fill="#F4B942"/><rect x="64.0" y="146.0" width="14" height="156.0" rx="7" fill="#FFD873" opacity="0.85"/><rect x="126.0" y="146.0" width="14" height="156.0" rx="7" fill="#E0961C" opacity="0.55"/><path d="M54.0 144.0 L146.0 144.0 L111.0 112.0 L100.0 94.0 L89.0 112.0 Z" fill="#F3D9B1" stroke="#D9BE8F" stroke-width="2" stroke-linejoin="round"/><path d="M93.0 114.0 L107.0 114.0 L100.0 94.0 Z" fill="#2B2B2B"/><path d="M54.0 266.0 L146.0 266.0 L146.0 286.0 Q146.0 300.0 132.0 300.0 L68.0 300.0 Q54.0 300.0 54.0 286.0 Z" fill="#F0A6A6"/><rect x="54.0" y="266.0" width="92.0" height="5" fill="#2B2B2B" opacity="0.12"/><path d="M54.0 144.0 L54.0 286.0 Q54.0 300.0 68.0 300.0 L132.0 300.0 Q146.0 300.0 146.0 286.0 L146.0 144.0" fill="none" stroke="#D89428" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="70.0" cy="204.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><ellipse cx="130.0" cy="204.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><circle cx="83.0" cy="194.0" r="9" fill="#fff"/><circle cx="117.0" cy="194.0" r="9" fill="#fff"/><circle cx="85.5" cy="195.5" r="5.6" fill="#2B2B2B"/><circle cx="119.5" cy="195.5" r="5.6" fill="#2B2B2B"/><circle cx="83.5" cy="192.5" r="1.6" fill="#fff"/><circle cx="117.5" cy="192.5" r="1.6" fill="#fff"/><path d="M89.0 210.0 Q100.0 219.0 111.0 210.0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>',
+    '<rect x="54.0" y="118.0" width="92.0" height="186.0" fill="#F4B942"/><rect x="64.0" y="120.0" width="14" height="182.0" rx="7" fill="#FFD873" opacity="0.85"/><rect x="126.0" y="120.0" width="14" height="182.0" rx="7" fill="#E0961C" opacity="0.55"/><path d="M54.0 118.0 L146.0 118.0 L111.0 86.0 L100.0 68.0 L89.0 86.0 Z" fill="#F3D9B1" stroke="#D9BE8F" stroke-width="2" stroke-linejoin="round"/><path d="M93.0 88.0 L107.0 88.0 L100.0 68.0 Z" fill="#2B2B2B"/><path d="M54.0 266.0 L146.0 266.0 L146.0 286.0 Q146.0 300.0 132.0 300.0 L68.0 300.0 Q54.0 300.0 54.0 286.0 Z" fill="#F0A6A6"/><rect x="54.0" y="266.0" width="92.0" height="5" fill="#2B2B2B" opacity="0.12"/><path d="M54.0 118.0 L54.0 286.0 Q54.0 300.0 68.0 300.0 L132.0 300.0 Q146.0 300.0 146.0 286.0 L146.0 118.0" fill="none" stroke="#D89428" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="70.0" cy="178.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><ellipse cx="130.0" cy="178.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><circle cx="83.0" cy="168.0" r="9" fill="#fff"/><circle cx="117.0" cy="168.0" r="9" fill="#fff"/><circle cx="85.5" cy="169.5" r="5.6" fill="#2B2B2B"/><circle cx="119.5" cy="169.5" r="5.6" fill="#2B2B2B"/><circle cx="83.5" cy="166.5" r="1.6" fill="#fff"/><circle cx="117.5" cy="166.5" r="1.6" fill="#fff"/><path d="M89.0 184.0 Q100.0 193.0 111.0 184.0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>',
+    '<rect x="54.0" y="92.0" width="92.0" height="212.0" fill="#F4B942"/><rect x="64.0" y="94.0" width="14" height="208.0" rx="7" fill="#FFD873" opacity="0.85"/><rect x="126.0" y="94.0" width="14" height="208.0" rx="7" fill="#E0961C" opacity="0.55"/><path d="M54.0 92.0 L146.0 92.0 L111.0 60.0 L100.0 42.0 L89.0 60.0 Z" fill="#F3D9B1" stroke="#D9BE8F" stroke-width="2" stroke-linejoin="round"/><path d="M93.0 62.0 L107.0 62.0 L100.0 42.0 Z" fill="#2B2B2B"/><path d="M54.0 266.0 L146.0 266.0 L146.0 286.0 Q146.0 300.0 132.0 300.0 L68.0 300.0 Q54.0 300.0 54.0 286.0 Z" fill="#F0A6A6"/><rect x="54.0" y="266.0" width="92.0" height="5" fill="#2B2B2B" opacity="0.12"/><path d="M54.0 92.0 L54.0 286.0 Q54.0 300.0 68.0 300.0 L132.0 300.0 Q146.0 300.0 146.0 286.0 L146.0 92.0" fill="none" stroke="#D89428" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="70.0" cy="152.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><ellipse cx="130.0" cy="152.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><circle cx="83.0" cy="142.0" r="9" fill="#fff"/><circle cx="117.0" cy="142.0" r="9" fill="#fff"/><circle cx="85.5" cy="143.5" r="5.6" fill="#2B2B2B"/><circle cx="119.5" cy="143.5" r="5.6" fill="#2B2B2B"/><circle cx="83.5" cy="140.5" r="1.6" fill="#fff"/><circle cx="117.5" cy="140.5" r="1.6" fill="#fff"/><path d="M89.0 158.0 Q100.0 167.0 111.0 158.0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>',
+    '<rect x="54.0" y="66.0" width="92.0" height="238.0" fill="#F4B942"/><rect x="64.0" y="68.0" width="14" height="234.0" rx="7" fill="#FFD873" opacity="0.85"/><rect x="126.0" y="68.0" width="14" height="234.0" rx="7" fill="#E0961C" opacity="0.55"/><path d="M54.0 66.0 L146.0 66.0 L111.0 34.0 L100.0 16.0 L89.0 34.0 Z" fill="#F3D9B1" stroke="#D9BE8F" stroke-width="2" stroke-linejoin="round"/><path d="M93.0 36.0 L107.0 36.0 L100.0 16.0 Z" fill="#2B2B2B"/><path d="M54.0 266.0 L146.0 266.0 L146.0 286.0 Q146.0 300.0 132.0 300.0 L68.0 300.0 Q54.0 300.0 54.0 286.0 Z" fill="#F0A6A6"/><rect x="54.0" y="266.0" width="92.0" height="5" fill="#2B2B2B" opacity="0.12"/><path d="M54.0 66.0 L54.0 286.0 Q54.0 300.0 68.0 300.0 L132.0 300.0 Q146.0 300.0 146.0 286.0 L146.0 66.0" fill="none" stroke="#D89428" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="70.0" cy="126.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><ellipse cx="130.0" cy="126.0" rx="9" ry="6" fill="#F2957A" opacity="0.6"/><circle cx="83.0" cy="116.0" r="9" fill="#fff"/><circle cx="117.0" cy="116.0" r="9" fill="#fff"/><circle cx="85.5" cy="117.5" r="5.6" fill="#2B2B2B"/><circle cx="119.5" cy="117.5" r="5.6" fill="#2B2B2B"/><circle cx="83.5" cy="114.5" r="1.6" fill="#fff"/><circle cx="117.5" cy="114.5" r="1.6" fill="#fff"/><path d="M89.0 132.0 Q100.0 141.0 111.0 132.0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>'
+  ];
+  function stageOf(n){ return Math.min(5, Math.floor(n / 5)); }
+  function pencilMarkup(stage){
+    return `<svg viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg">${PENCIL_STAGES[stage]}</svg>`;
+  }
+  // Each stage's own total height within the shared viewBox (tip to base) — used only
+  // to compute a scale ratio for the grow animation between two stages.
+  const PENCIL_HEIGHTS = [154, 180, 206, 232, 258, 284];
+
+  // Header logo: a fixed, non-growing pose (stage 3), set once on load.
+  $("logoIcon").innerHTML = pencilMarkup(3);
+
+  // Shown right after a check-in is submitted — the actual reward moment. Two scenes:
+  // praise first, then the pencil visibly grows taller into its new stage (same fixed
+  // display box throughout, since all stages share one viewBox anchored to the same
+  // base — no container resizing needed). Tap anywhere to skip ahead/dismiss early.
+  function showGrowthCelebration(beforeTotal, afterTotal){
+    const overlay = $("growthOverlay");
+    const beforeStage = stageOf(beforeTotal);
+    const afterStage = stageOf(afterTotal);
+    const grew = afterStage > beforeStage;
+
+    overlay.innerHTML = `
+      <div class="growth-card">
+        <div class="growth-avatar" id="growthAvatar">
+          ${pencilMarkup(beforeStage)}
+        </div>
+        <p class="growth-msg-hi" id="growthMsgHi">बहुत बढ़िया!</p>
+        <p class="growth-msg-en" id="growthMsgEn">Great work!</p>
+        <p class="growth-child-hint">हर गतिविधि के साथ यह थोड़ा बढ़ता है — बच्चे को ज़रूर दिखाएं!<span class="en">It grows a little with every activity — show it to your child!</span></p>
+        <p class="growth-tap-hint">आगे बढ़ने के लिए टैप करें / Tap to continue</p>
+      </div>
+    `;
+    overlay.style.display = "flex";
+    overlay.onclick = () => { overlay.style.display = "none"; resetApp(); };
+
+    const growTimer = setTimeout(() => {
+      const avatarEl = $("growthAvatar");
+      const msgHi = $("growthMsgHi");
+      const msgEn = $("growthMsgEn");
+      if(!avatarEl) return;
+      if(msgHi) msgHi.textContent = "फिर मिलेंगे!";
+      if(msgEn) msgEn.textContent = "See you soon!";
+
+      // A little celebratory wiggle — every completion gets one, not just the
+      // ones that cross a growth stage, so there's always some visible response.
+      const doShake = () => {
+        avatarEl.classList.add("shake");
+        setTimeout(() => avatarEl.classList.remove("shake"), 550);
+      };
+
+      if(!grew){ doShake(); return; }
+
+      // Stretch the current (before) pencil taller first — a visible "growing"
+      // motion — then swap in the crisp, correctly-proportioned after-stage art
+      // once the stretch settles, so the final pose is never actually distorted.
+      const scale = PENCIL_HEIGHTS[afterStage] / PENCIL_HEIGHTS[beforeStage];
+      avatarEl.style.setProperty("--grow-scale", scale);
+      avatarEl.classList.add("growing");
+      let settled = false;
+      const settle = () => {
+        if(settled) return;
+        settled = true;
+        avatarEl.innerHTML = pencilMarkup(afterStage);
+        avatarEl.classList.remove("growing");
+        avatarEl.style.removeProperty("--grow-scale");
+        doShake();
+      };
+      const svgEl = avatarEl.querySelector("svg");
+      if(svgEl) svgEl.addEventListener("transitionend", settle, { once: true });
+      setTimeout(settle, 900); // fallback in case transitionend doesn't fire
+    }, 1400);
+
+    setTimeout(() => {
+      clearTimeout(growTimer);
+      overlay.style.display = "none";
+      resetApp();
+    }, 3400);
+  }
+
+  function populateMonths(){
+    const sel = $("monthSelect");
+    MODULES.forEach((m,i)=>{
+      const opt = document.createElement("option");
+      opt.value = m.id;
+      opt.textContent = m.hi + " (" + m.en + ") — " + m.title_hi;
+      if(i===0) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+  populateMonths();
+
+  // Slim progress bar in the header, visible on every page — a lighter-weight
+  // stand-in for the old always-visible avatar card, kept purely as a number/bar
+  // so the pencil itself stays reserved for the growth-celebration moment only.
+  function updateTracker(){
+    const total = getTotalCompleted();
+    const pct = Math.min(100, Math.round((total / TOTAL_ACTIVITIES) * 100));
+    $("progressFill").style.width = pct + "%";
+    $("progressText").textContent = `${total}/${TOTAL_ACTIVITIES} गतिविधियाँ पूरी / activities completed`;
+  }
+  updateTracker();
+
+  // ---------- Page-by-page navigation ----------
+  // Only one .page is ever visible at a time — everything else is a hidden sibling.
+  function showPage(id){
+    document.querySelectorAll(".page").forEach(p => { p.style.display = "none"; });
+    $(id).style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $("monthNextBtn").addEventListener("click", () => showPage("page-menu"));
+
+  function speakHindi(text){
+    if(!('speechSynthesis' in window)) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "hi-IN";
+    u.rate = 0.9;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }
+
+  // ---------- Fallback tap menu ----------
+  function renderTiles(){
+    const grid = $("tileGrid");
+    grid.innerHTML = "";
+    const colors = ["#FAEEDA","#E1F5EE","#FAECE7","#E6F1FB","#EEEDFE","#F1EFE8"];
+    TILES.forEach((t, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tile";
+      btn.innerHTML = `<div class="photo" style="background:${colors[i % colors.length]}"></div>
+        <div class="label"><p class="hi">${t.hi}</p><p class="en">${t.en}</p></div>`;
+      btn.addEventListener("click", () => selectCategory(t.key === "other" ? "mixed" : t.key));
+      grid.appendChild(btn);
+    });
+  }
+  renderTiles();
+
+  function resetApp(){
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+    currentCategory = null;
+    hasMultipleColours = null;
+    hasMultipleSizes = null;
+    currentActivity = null;
+    currentTier = "on-level";
+    $("fallbackCard").style.display = "block";
+    $("followupCard").style.display = "none";
+    $("activityWrap").innerHTML = "";
+    $("checkinWrap").innerHTML = "";
+    showPage("page-month");
+  }
+  $("homeBtn").addEventListener("click", resetApp);
+
+  // Testing-only affordance: long-press the logo badge (~1.2s) to wipe all saved
+  // progress and start over from 0/30 — not something a parent would stumble
+  // into by accident, but saves digging through browser settings between test
+  // rounds. Confirms before actually clearing anything.
+  (function setupTestReset(){
+    const el = $("logoIcon");
+    if(!el) return;
+    let pressTimer = null;
+    let startX = 0, startY = 0;
+    const MOVE_TOLERANCE = 15; // px — a real finger can't hold perfectly still for 1.2s,
+                                // so only cancel on a genuine drag, not tiny jitter.
+
+    const doReset = () => {
+      const ok = window.confirm("टेस्टिंग रीसेट — सारी सेव की गई प्रगति मिटाएं?\nReset for testing — clear all saved progress?");
+      if(ok){
+        try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+        window.location.reload();
+      }
+    };
+    const startPress = (x, y) => {
+      startX = x; startY = y;
+      pressTimer = setTimeout(doReset, 1200);
+    };
+    const cancelPress = () => { if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; } };
+    const checkMove = (x, y) => {
+      if(Math.abs(x - startX) > MOVE_TOLERANCE || Math.abs(y - startY) > MOVE_TOLERANCE) cancelPress();
+    };
+
+    el.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      if(t) startPress(t.clientX, t.clientY);
+    }, { passive: true });
+    el.addEventListener("touchmove", (e) => {
+      const t = e.touches[0];
+      if(t) checkMove(t.clientX, t.clientY);
+    }, { passive: true });
+    el.addEventListener("touchend", cancelPress);
+    el.addEventListener("touchcancel", cancelPress);
+    el.addEventListener("mousedown", (e) => startPress(e.clientX, e.clientY));
+    el.addEventListener("mousemove", (e) => { if(pressTimer) checkMove(e.clientX, e.clientY); });
+    el.addEventListener("mouseup", cancelPress);
+    el.addEventListener("mouseleave", cancelPress);
+  })();
+
+  function selectCategory(cat){
+    currentCategory = cat;
+    $("fallbackCard").style.display = "none";
+    askFollowup();
+  }
+
+  function askFollowup(){
+    if(currentCategory === "pulses" || currentCategory === "vegetables"){
+      showColourQuestion();
+    } else {
+      finalizeAndShow();
+    }
+  }
+
+  function showColourQuestion(){
+    $("followupCard").style.display = "block";
+    $("followupQ").innerHTML = "क्या एक से ज़्यादा रंग हैं?<br><span style='font-size:12px;color:var(--muted);font-weight:500;'>Do you have more than one colour?</span>";
+    $("yesBtn").onclick = () => { hasMultipleColours = true; afterColourQuestion(); };
+    $("noBtn").onclick = () => { hasMultipleColours = false; afterColourQuestion(); };
+  }
+
+  function afterColourQuestion(){
+    // Only pulses activities currently depend on size variety (e.g. December's
+    // big/small sorting) — no vegetables activity does, so we skip the extra
+    // tap there rather than ask a question with no payoff.
+    if(currentCategory === "pulses"){
+      showSizeQuestion();
+    } else {
+      finalizeAndShow();
+    }
+  }
+
+  function showSizeQuestion(){
+    $("followupQ").innerHTML = "क्या अलग-अलग आकार हैं — कुछ बड़े, कुछ छोटे?<br><span style='font-size:12px;color:var(--muted);font-weight:500;'>Do you have different sizes — some big, some small?</span>";
+    $("yesBtn").onclick = () => { hasMultipleSizes = true; finalizeAndShow(); };
+    $("noBtn").onclick = () => { hasMultipleSizes = false; finalizeAndShow(); };
+  }
+
+  function finalizeAndShow(){
+    $("followupCard").style.display = "none";
+    showActivities();
+  }
+
+  // How many of an activity's stated material needs the parent has told us
+  // they DON'T have (via the colour/size follow-up, or camera colour sampling).
+  // null = unknown/not asked, so it never counts against an activity.
+  function unmetNeeds(a){
+    if(!a.needs) return 0;
+    let count = 0;
+    if(a.needs.includes("colour") && hasMultipleColours === false) count++;
+    if(a.needs.includes("size") && hasMultipleSizes === false) count++;
+    return count;
+  }
+
+  // Swaps in an activity's easier/harder materials+steps+fallback when that tier
+  // exists and is suggested; title/skill tag/check-in questions stay the same either
+  // way, since the underlying goal being practiced doesn't change, only how it's asked.
+  // The parent never sees "easier"/"harder" anywhere — it's silent by design.
+  function applyTier(activity, tier){
+    if(tier === "on-level" || !activity.tiers || !activity.tiers[tier]) return activity;
+    const t = activity.tiers[tier];
+    return Object.assign({}, activity, {
+      materials_hi: t.materials_hi, materials_en: t.materials_en,
+      steps: t.steps, fallback: t.fallback
+    });
+  }
+
+  function showActivities(){
+    const month = $("monthSelect").value;
+    const suggestedTier = getSuggestedTier(month);
+    console.log(`[adaptive] ${month}: suggested tier = ${suggestedTier}`);
+    const all = ACTIVITIES[month] || [];
+    let matches = all.filter(a => {
+      if(currentCategory === "mixed"){
+        // "Something else" tap: every household has utensils regardless of what
+        // pulses/vegetables/spices/dough they have, so treat utensils activities
+        // as a safe universal match too, not just ones explicitly tagged mixed/any.
+        return a.category === "mixed" || a.category === "any" || a.category === "utensils";
+      }
+      return a.category === currentCategory || a.category === "any" || a.category === "mixed";
+    });
+    // Some months don't have any activity tagged for the exact category tapped
+    // (e.g. August has no "pulses" activity — its theme that month is shapes).
+    // Falling back to literally every activity in the month was a real bug: it
+    // could hand back something totally unrelated to what the parent said they
+    // have (a dough activity after tapping "pulses"). Fall back to utensils
+    // only instead — every household has utensils regardless of category — and
+    // only fall back to everything as a last resort that should rarely trigger.
+    if(matches.length === 0) matches = all.filter(a => a.category === "utensils");
+    if(matches.length === 0) matches = all;
+
+    // Don't keep re-showing the same activity once it's already been done this
+    // month — work through the rest first, so a parent doing several rounds in
+    // one sitting actually reaches everything available instead of one activity
+    // on repeat. Once every match for this category+month is done, say so.
+    const doneThisMonth = new Set(getMonthCompletions(month).map(c => c.activityTitleEn));
+    const notYetDone = matches.filter(a => !doneThisMonth.has(a.title_en));
+    if(notYetDone.length === 0){
+      renderMonthCompletePage();
+      showPage("page-activity");
+      return;
+    }
+
+    // Rank an exact category match above any/mixed/utensils catch-alls first —
+    // this was the other real bug: a generic "mixed" activity could outrank the
+    // actual pulses activity just because the pulses one needed a colour/size
+    // variety the parent said they don't have. Only within the same relevance
+    // tier do we then push unmet-material activities toward the bottom.
+    const pool = notYetDone.slice().sort((a, b) => {
+      const aExact = (a.category === currentCategory) ? 0 : 1;
+      const bExact = (b.category === currentCategory) ? 0 : 1;
+      if(aExact !== bExact) return aExact - bExact;
+      return unmetNeeds(a) - unmetNeeds(b);
+    });
+    // One activity per round, not a list of 3 — matches the page-by-page,
+    // one-thing-at-a-time flow instead of overwhelming the parent with choices.
+    currentActivity = applyTier(pool[0], suggestedTier);
+    currentTier = suggestedTier;
+    renderActivityPage(currentActivity, suggestedTier);
+    showPage("page-activity");
+  }
+
+  // A friendly stop, shown in place of an activity once every match for the
+  // tapped category has already been logged this month — reachable by trying
+  // a different category, or waiting for next month's activities to unlock.
+  function renderMonthCompletePage(){
+    const wrap = $("activityWrap");
+    wrap.innerHTML = `
+      <div class="card activity" style="text-align:center;">
+        <h4>शानदार! यह सब हो गया<span class="en">Amazing — you've done everything here for this month</span></h4>
+        <p style="color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.5;">
+          कोई और चीज़ चुनकर देखें, या अगले महीने वापस आएं।
+          <span class="en" style="display:block;margin-top:3px;">Try picking something else, or come back next month.</span>
+        </p>
+        <button class="btn done-btn" id="monthCompleteBackBtn">वापस जाएं<span class="en">Go back</span></button>
+      </div>
+    `;
+    $("monthCompleteBackBtn").addEventListener("click", () => {
+      $("activityWrap").innerHTML = "";
+      $("fallbackCard").style.display = "block";
+      $("followupCard").style.display = "none";
+      showPage("page-menu");
+    });
+  }
+
+  // Face taps live here per-activity as the parent goes; only written into the
+  // persisted completion log (above) when "Submit" is actually pressed.
+  const checkInResponses = {};
+  const FACES = [
+    { key:"easy", face:"😊", hi:"आसानी से", en:"Easily" },
+    { key:"help", face:"😐", hi:"मदद चाहिए थी", en:"Needed help" },
+    { key:"hard", face:"😟", hi:"मुश्किल हुई", en:"Struggled" }
+  ];
+
+  // Shown as a small pill above each activity — lets Prathiba visually confirm the
+  // adaptive logic is doing something (not hidden in the console), and gives parents
+  // gentle context without ever using a discouraging word like "hard."
+  const TIER_LABELS = {
+    easier: { hi: "आज: थोड़ा आसान", en: "Today: a bit easier" },
+    "on-level": { hi: "आज: सामान्य स्तर", en: "Today: usual level" },
+    harder: { hi: "आज: थोड़ा चुनौतीपूर्ण", en: "Today: a bit more challenging" }
+  };
+
+  // Explicit, visible notes for the two situations that used to be silent
+  // substitutions — telling the parent plainly why they're seeing something
+  // different from what they tapped or asked for, instead of leaving them to
+  // wonder (or feel like the app just isn't listening to what they picked).
+  function getActivityNote(act){
+    if(currentCategory !== "mixed" && act.category !== currentCategory && act.category !== "any" && act.category !== "mixed"){
+      return {
+        hi: "इस महीने उससे जुड़ी कोई गतिविधि नहीं थी, तो यहाँ एक और गतिविधि दी गई है — जो हर घर में मिलने वाली चीज़ों से हो सकती है।",
+        en: "There wasn't an activity for that this month, so here's a different one instead — using things every home has."
+      };
+    }
+    if(unmetNeeds(act) > 0){
+      return {
+        hi: "इस गतिविधि के लिए थोड़ी और अलग चीज़ें हों तो बेहतर है। जो आपके पास नहीं, उसके लिए नीचे दिया आसान तरीक़ा अपनाएं।",
+        en: "This works best with a bit more variety than you have. For what's missing, use the simpler approach in the instructions below."
+      };
+    }
+    return null;
+  }
+
+  // Page 3: the single matched activity, full-screen — instructions, materials,
+  // fallback, read-aloud, and a "Done" button that moves on to the check-in page.
+  function renderActivityPage(act, tier){
+    const wrap = $("activityWrap");
+    const label = TIER_LABELS[tier] || TIER_LABELS["on-level"];
+    const note = getActivityNote(act);
+    const noteHtml = note ? `<div class="activity-note">ℹ️ ${note.hi}<span class="en">${note.en}</span></div>` : "";
+    const stepsHtml = act.steps.map(s => `<li>${s.hi}<span class="en">${s.en}</span></li>`).join("");
+    wrap.innerHTML = `
+      <div class="card activity">
+        <span class="tier-pill">${label.hi}<span class="en"> · ${label.en}</span></span>
+        <h4>${act.title_hi}<span class="en">${act.title_en}</span></h4>
+        <div class="meta">🧺 ${act.materials_hi} / ${act.materials_en} · ⏱ ${act.minutes}</div>
+        ${noteHtml}
+        <ol>${stepsHtml}</ol>
+        <div class="fallback"><strong>अगर बच्चा न समझे:</strong> ${act.fallback.hi}<span class="en">If the child doesn't understand: ${act.fallback.en}</span></div>
+        <span class="skill-tag">${act.skill_hi}<span class="en"> · ${act.skill_en}</span></span><br>
+        <button class="speak-btn">🔊 सुनें / Read aloud</button>
+        <button class="btn done-btn" id="activityDoneBtn">हो गया, पूरा किया! <span class="en">Done, we finished!</span></button>
+      </div>
+    `;
+    wrap.querySelector(".speak-btn").addEventListener("click", () => {
+      const fullHi = act.title_hi + "। " + act.steps.map(s=>s.hi).join("। ") + "। " + act.fallback.hi;
+      speakHindi(fullHi);
+    });
+    $("activityDoneBtn").addEventListener("click", () => {
+      renderCheckinPage(act);
+      showPage("page-checkin");
+    });
+  }
+
+  // Page 4: check-in questions for the one activity just finished, then submit —
+  // records the completion and hands off to the growth celebration.
+  function renderCheckinPage(act){
+    const wrap = $("checkinWrap");
+    const ciQs = [{hi:UNIVERSAL_FIRST_Q_HI, en:UNIVERSAL_FIRST_Q_EN}, ...(act.checkIn || [])];
+    const ciOptional = act.checkInOptional || [];
+    const questionBlock = (qs, groupPrefix) => qs.map((q, qi) => `
+          <p class="ci-q">${q.hi}</p>
+          <p class="ci-q-en">${q.en}</p>
+          <div class="ci-faces" data-q="${groupPrefix}${qi}">
+            ${FACES.map(f => `<button data-face="${f.key}">${f.face}<span>${f.hi}</span></button>`).join("")}
+          </div>
+        `).join("");
+
+    wrap.innerHTML = `
+      <div class="card checkin">
+        <p class="ci-title">यह करने के बाद — कैसा रहा? <span style="font-weight:500;color:var(--muted);">/ After you try this — how did it go?</span></p>
+        ${questionBlock(ciQs, "")}
+        ${ciOptional.length ? `
+          <p class="ci-title" style="margin-top:10px;">ज़रूरी नहीं — अगर आगे बढ़ना चाहें <span style="font-weight:500;color:var(--muted);">/ Optional</span></p>
+          ${questionBlock(ciOptional, "opt")}
+        ` : ""}
+        <button class="btn checkin-submit">जमा करें / Submit</button>
+        <p class="checkin-saved-msg">✓ सेव हो गया, धन्यवाद! / Saved, thank you!</p>
+      </div>
+    `;
+    wrap.querySelectorAll(".ci-faces").forEach(group => {
+      group.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          group.querySelectorAll("button").forEach(b => b.classList.remove("picked"));
+          btn.classList.add("picked");
+          const key = act.title_en + "|" + group.dataset.q;
+          checkInResponses[key] = btn.dataset.face;
+        });
+      });
+    });
+    const submitBtn = wrap.querySelector(".checkin-submit");
+    const savedMsg = wrap.querySelector(".checkin-saved-msg");
+    submitBtn.addEventListener("click", () => {
+      if(submitBtn.classList.contains("saved")) return; // guard against double-counting on repeat taps
+      submitBtn.classList.add("saved");
+      submitBtn.textContent = "✓ सेव हो गया / Saved";
+      savedMsg.style.display = "block";
+
+      const prefix = act.title_en + "|";
+      const faces = {};
+      Object.keys(checkInResponses).forEach(key => {
+        if(key.startsWith(prefix)) faces[key.slice(prefix.length)] = checkInResponses[key];
+      });
+      const month = $("monthSelect").value;
+      const beforeTotal = getTotalCompleted();
+      recordCompletion(month, act, faces, currentTier);
+      setTimeout(() => {
+        showGrowthCelebration(beforeTotal, getTotalCompleted());
+      }, 500);
+    });
+  }
+
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js").catch(err => console.warn("SW registration failed", err));
+  }
+})();
+</script>
+</body>
+</html>

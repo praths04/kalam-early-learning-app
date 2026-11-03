@@ -1,0 +1,14 @@
+{
+  "name": "Kalam — Kitchen Learning",
+  "short_name": "Kalam",
+  "description": "Turn your kitchen into your child's classroom — tap what you have, get a curriculum-matched activity, no reading required.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#C98A1F",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192-pencil2.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512-pencil2.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
