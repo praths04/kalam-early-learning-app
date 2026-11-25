@@ -8,7 +8,7 @@ Kalam is an early-childhood learning app prototype for parents in low-income Ind
 
 ## The problem
 
-Research shows play-based learning outperforms rote learning over the long term. Schools tried to extend play-based activities into the home, but many parents have limited formal education and inflexible jobs, so they lacked the time and background to design activities themselves, even with printed guidance. I saw this firsthand while volunteering in an early-education program with the Youngistaan Foundation.
+Research shows play-based learning outperforms rote learning over the long term. Schools tried to extend play-based activities into the home, but many parents have limited formal education and inflexible jobs, so they lacked the time and background to design activities themselves, even with guidance. I saw this firsthand while volunteering in an early-education program with the Youngistaan Foundation.
 
 Competitive research (Buddy.ai, Kutuki, FunDad, Playbox, ABC Finder, and others) showed no product that ties home activities to a child's actual school curriculum, is designed for low-literacy parents, and uses zero-cost household materials instead of purchased kits or subscriptions. These apps also tend to take parents out of the learning process, with the app or a screen teaching the child directly. Kalam is built to include parents, so the parent leads each activity with their child, and that is what sets it apart.
 
